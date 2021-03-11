@@ -73,4 +73,6 @@
 .imagenes{
   width: 720;
   height: 960;
+  max-width: 720;
+  max-height: 960;
 }
