@@ -15,6 +15,10 @@
   position: -webkit-sticky;
   position: sticky;
   top: 0;
+  z-index: 3;
+}
+.zpos{
+  z-index: 0;
 }
 .fondo{
   background-color: rgb(145, 121, 93);
@@ -29,7 +33,7 @@
   height: 100%;
   width: 0;
   position: fixed;
-  z-index: 100;
+  z-index: 3;
   top: 0;
   left: 0;
   background-color:  rgb(206, 175, 147);
@@ -62,4 +66,11 @@
 @media screen and (max-height: 450px) {
   .sidenav {padding-top: 15px;}
   .sidenav a {font-size: 18px;}
+}
+.sombras{
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.678), 0 6px 20px 0 rgba(0, 0, 0, 0.452);
+}
+.imagenes{
+  width: 720;
+  height: 960;
 }
