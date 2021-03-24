@@ -106,3 +106,9 @@
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;  
 }
+.tarjeta{
+  background-color: antiquewhite;
+}
+.sombreado li{
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.678), 0 6px 20px 0 rgba(0, 0, 0, 0.452);
+}
