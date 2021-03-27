@@ -1,3 +1,10 @@
+<%-- 
+    Document   : index
+    Created on : 24-mar-2021, 10:51:55
+    Author     : juana
+--%>
+
+<%@page contentType="text/html" pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -30,6 +37,8 @@
   <title>vaqueros J&D</title>
   <script src="js/slicermenonu.js"></script>
   <script src="https://kit.fontawesome.com/8bdbc3ead7.js" crossorigin="anonymous"></script>
+  <script src="js/comprobaciones.js"></script>
+  
 </head>
 
 <body class="fondo">
@@ -63,27 +72,24 @@
             iniciar sesion
           </button>
           <div class="dropdown-menu dropdown-menu-right">
-            <form class="px-4 py-3">
+              <form class="px-4 py-3" action="/" id="formulario1" name="formulario1" onsubmit="return prueba(1)">
               <div class="form-group">
-                <label for="exampleDropdownFormEmail1">Email address</label>
-                <input type="email" class="form-control" id="exampleDropdownFormEmail1" placeholder="email@example.com">
+                  <label for="email1">usuario/email  <span class="erroruse" style="color: red;"></span></label>
+                <input type="text" class="form-control" name="log" id="email1" placeholder="email@ejemplo.com">
               </div>
               <div class="form-group">
-                <label for="exampleDropdownFormPassword1">Password</label>
-                <input type="password" class="form-control" id="exampleDropdownFormPassword1" placeholder="Password">
+                <label for="password1">contraseña</label>
+                <input type="password" class="form-control" name="pass" id="password1" placeholder="contraseña">
               </div>
               <div class="form-group">
                 <div class="form-check">
-                  <input type="checkbox" class="form-check-input" id="dropdownCheck">
-                  <label class="form-check-label" for="dropdownCheck">
-                    Remember me
-                  </label>
+                  
                 </div>
               </div>
-              <button type="submit" class="btn btn-primary">Sign in</button>
+              <button type="submit" class="btn btn-primary">Entrar</button>
             </form>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#">New around here? Sign up</a>
+            <a class="dropdown-item" href="#">crear una cuenta nueva</a>
             <a class="dropdown-item" href="#">Forgot password?</a>
           </div>
         </div>
@@ -109,29 +115,26 @@
                 <i class="fas fa-user" style="font-size: 200%;"></i>
               </button>
               <div class="dropdown-menu dropdown-menu-right zpos">
-                <form class="px-4 py-3">
+                <form class="px-4 py-3" name="formulario2" onsubmit="return prueba(2)">
                   <div class="form-group">
-                    <label for="exampleDropdownFormEmail1">Email address</label>
-                    <input type="email" class="form-control" id="exampleDropdownFormEmail1"
-                      placeholder="email@example.com">
+                    <label for="email2">usuario/email<span class="erroruse" style="color: red;"></span></label>
+                    <input type="email" class="form-control" name="log" id="email2"
+                      placeholder="email@ejemplo.com">
                   </div>
                   <div class="form-group">
-                    <label for="exampleDropdownFormPassword1">Password</label>
-                    <input type="password" class="form-control" id="exampleDropdownFormPassword1"
-                      placeholder="Password">
+                    <label for="password2">contraseña</label>
+                    <input type="password" class="form-control" name="pass" id="password2"
+                      placeholder="contraseña">
                   </div>
                   <div class="form-group">
                     <div class="form-check">
-                      <input type="checkbox" class="form-check-input" id="dropdownCheck">
-                      <label class="form-check-label" for="dropdownCheck">
-                        Remember me
-                      </label>
+                      
                     </div>
                   </div>
-                  <button type="submit" class="btn btn-primary">Sign in</button>
+                  <button type="submit" class="btn btn-primary">Entrar</button>
                 </form>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#">New around here? Sign up</a>
+                <a class="dropdown-item" href="#">crear una cuenta nueva</a>
                 <a class="dropdown-item" href="#">Forgot password?</a>
               </div>
             </div>
@@ -169,7 +172,7 @@
           <img src="img/slicer/WhatsApp Image 2021-03-11 at 11.59.54.jpeg" class="d-block w-100" alt="...">
           <div class="carousel-caption ">
             <h5>todo tipo de pantalones vaqueros</h5>
-            <p>los mejoras de toda andalicÃ­a</p>
+            <p>los mejoras de toda andalicía</p>
           </div>
         </div>
         <div class="carousel-item">
@@ -247,9 +250,9 @@
 <!-- -----------------------------------------------jumbotron--------------------------------------------- -->
 <div class="jumbo p-5">
   <h1 class="display-4">nuestras tienda</h1>
-  <p class="lead">consulta la ubicaciÃ³n de las tiendas a lo largo de la semana y los horarios disponible de todo el mes</p>
+  <p class="lead">consulta la ubicación de las tiendas a lo largo de la semana y los horarios disponible de todo el mes</p>
   <hr class="my-4">
-  <p>comparte tu ubicaciÃ³n para ver las tiendas mas cercanas para recoger sus pedidos o ver nuestros productos de cerca </p>
+  <p>comparte tu ubicación para ver las tiendas mas cercanas para recoger sus pedidos o ver nuestros productos de cerca </p>
   <a class="btn btn-primary btn-lg" href="#" role="button">ver tiendas</a>
 </div>
 <!-- -----------------------------------------------jumbotron--------------------------------------------- -->
@@ -327,7 +330,7 @@
   
     <!-- Copyright -->
     <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
-      Â© 2021 Copyright:Juan Antonio Gonzalez vidal
+      © 2021 Copyright:Juan Antonio Gonzalez vidal
      
     </div>
     <!-- Copyright -->
