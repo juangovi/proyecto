@@ -118,7 +118,7 @@
                 <form class="px-4 py-3" name="formulario2" onsubmit="return prueba(2)">
                   <div class="form-group">
                     <label for="email2">usuario/email<span class="erroruse" style="color: red;"></span></label>
-                    <input type="email" class="form-control" name="log" id="email2"
+                    <input type="text" class="form-control" name="log" id="email2"
                       placeholder="email@ejemplo.com">
                   </div>
                   <div class="form-group">
