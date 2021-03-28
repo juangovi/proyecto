@@ -72,7 +72,8 @@
             iniciar sesion
           </button>
           <div class="dropdown-menu dropdown-menu-right">
-              <form class="px-4 py-3" action="/" id="formulario1" name="formulario1" onsubmit="return prueba(1)">
+              <form class="px-4 py-3" method="post" action="inicio" id="formulario1" name="formulario1" onsubmit="return prueba(1)">
+                  <input type="hidden" name="pag" value="index.jsp"/>
               <div class="form-group">
                   <label for="email1">usuario/email  <span class="erroruse" style="color: red;"></span></label>
                 <input type="text" class="form-control" name="log" id="email1" placeholder="email@ejemplo.com">
@@ -115,7 +116,8 @@
                 <i class="fas fa-user" style="font-size: 200%;"></i>
               </button>
               <div class="dropdown-menu dropdown-menu-right zpos">
-                <form class="px-4 py-3" name="formulario2" onsubmit="return prueba(2)">
+                <form class="px-4 py-3" method="post" action="inicio" name="formulario2" onsubmit="return prueba(2)">
+                    <input type="hidden" name="pag" value="index.jsp"/>
                   <div class="form-group">
                     <label for="email2">usuario/email<span class="erroruse" style="color: red;"></span></label>
                     <input type="text" class="form-control" name="log" id="email2"
