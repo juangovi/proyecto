@@ -4,11 +4,25 @@
     Author     : juana
 --%>
 
+<%@page import="modelo.Usuario"%>
 <%@page contentType="text/html" pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
+    <!---------------------codigo----------------------->
+    <%
+        String nom="iniciar sesion";
+        Usuario user=null;
+        boolean log=false;
+         HttpSession sesion=request.getSession(); 
+        if(sesion.getAttribute("user")!=null){
+                user=(Usuario)sesion.getAttribute("user");
+                log=true;
+                nom=user.getNombre();
+            }
+    %>
+    <!---------------------codigo----------------------->
   <!-- Required meta tags -->
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -69,8 +83,19 @@
         <div class="btn-group">
           <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
             aria-expanded="false">
-            iniciar sesion
+            <%=nom%>
           </button>
+          <%
+            if(log){
+          %>
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+               <a class="dropdown-item" href="#">mi perfil</a>
+               <a class="dropdown-item" href="#">cerrar sesion</a>
+               
+          </div>
+          <%
+            }else{
+          %>
           <div class="dropdown-menu dropdown-menu-right">
               <form class="px-4 py-3" method="post" action="inicio" id="formulario1" name="formulario1" onsubmit="return prueba(1)">
                   <input type="hidden" name="pag" value="index.jsp"/>
@@ -93,6 +118,9 @@
             <a class="dropdown-item" href="#">crear una cuenta nueva</a>
             <a class="dropdown-item" href="#">Forgot password?</a>
           </div>
+          <%
+            }
+          %>
         </div>
       </div>
     </nav>
@@ -115,6 +143,17 @@
                 aria-expanded="false">
                 <i class="fas fa-user" style="font-size: 200%;"></i>
               </button>
+                <%
+            if(log){
+          %>
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+               <a class="dropdown-item" href="#">mi perfil</a>
+               <a class="dropdown-item" href="#">cerrar sesion</a>
+               
+          </div>
+          <%
+            }else{
+          %>
               <div class="dropdown-menu dropdown-menu-right zpos">
                 <form class="px-4 py-3" method="post" action="inicio" name="formulario2" onsubmit="return prueba(2)">
                     <input type="hidden" name="pag" value="index.jsp"/>
@@ -139,6 +178,9 @@
                 <a class="dropdown-item" href="#">crear una cuenta nueva</a>
                 <a class="dropdown-item" href="#">Forgot password?</a>
               </div>
+              <%
+            }
+          %>
             </div>
           </div>
         </div>

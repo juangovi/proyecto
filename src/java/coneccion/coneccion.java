@@ -21,7 +21,7 @@ import modelo.Usuario;
  */
 public class coneccion {
     private final static String drv="com.mysql.jdbc.Driver";
-	private final static String db="jdbc:mysql://localhost:3306/trebushop";
+	private final static String db="jdbc:mysql://localhost:3306/vaquerosjd";
 	private final static String usserandpass="root";
 	private Connection cn;
 	private ResultSet rs;
@@ -69,7 +69,7 @@ public class coneccion {
                     int rol=rs.getInt("rol");
                     String direccion=rs.getString("direccion");
                     String geoloc=rs.getString("geoloc");
-                    String estado=rs.getString("estaado");
+                    String estado=rs.getString("estado");
                     String imagen=rs.getString("imagen");
                     String token=rs.getString("token");
                     usuario=new Usuario(id, nombre, apellidos, nick, email, password, rol, direccion, geoloc, id, imagen, token);
