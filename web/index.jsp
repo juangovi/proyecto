@@ -63,8 +63,8 @@
     <img src="img/bannersmall.png" class="mx-auto img-fluid " alt="...">
   </div>
   <!-- navar -->
-
-  <div class="d-none d-lg-block sticky-top ">
+  
+  <div class="d-none d-lg-block sticky-top aver">
     <nav class="navbar navbar-expand navbar-light barra ">
       <a class="mr-3 letra" href="#">Juanito & Dolores</a>
       <div class="navbar-collapse">
@@ -81,13 +81,23 @@
           </li>
         </ul>
         <div class="btn-group">
-          <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+          <!--<button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
             aria-expanded="false">
-            <%=nom%>
-          </button>
+            
+          </button>-->
+
+
+
+<!-- Modal -->
+
+
           <%
             if(log){
           %>
+          <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+            aria-expanded="false">
+              <%=nom%>
+          </button>
           <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
                <a class="dropdown-item" href="#">mi perfil</a>
                <a class="dropdown-item" href="#">cerrar sesion</a>
@@ -96,28 +106,9 @@
           <%
             }else{
           %>
-          <div class="dropdown-menu dropdown-menu-right">
-              <form class="px-4 py-3" method="post" action="inicio" id="formulario1" name="formulario1" onsubmit="return prueba(1)">
-                  <input type="hidden" name="pag" value="index.jsp"/>
-              <div class="form-group">
-                  <label for="email1">usuario/email  <span class="erroruse" style="color: red;"></span></label>
-                <input type="text" class="form-control" name="log" id="email1" placeholder="email@ejemplo.com">
-              </div>
-              <div class="form-group">
-                <label for="password1">contraseña</label>
-                <input type="password" class="form-control" name="pass" id="password1" placeholder="contraseña">
-              </div>
-              <div class="form-group">
-                <div class="form-check">
-                  
-                </div>
-              </div>
-              <button type="submit" class="btn btn-primary">Entrar</button>
-            </form>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#">crear una cuenta nueva</a>
-            <a class="dropdown-item" href="#">Forgot password?</a>
-          </div>
+          <button type="button" class="btn" data-toggle="modal" data-target="#exampleModal">
+            iniciar sesion
+          </button>
           <%
             }
           %>
@@ -131,21 +122,26 @@
     <nav class="py-1 text-center navbar-light barra">
       <div class="container-fluid">
         <div class="row">
-          <div class="col-2 text-left">
+          <div class="col-3 text-left">
             <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
           </div>
-          <div class="col-8 text-center">
+          <div class="col-6 text-center">
             <a class="letra" href="#">Juanito & Dolores</a>
           </div>
-          <div class="col-2 text-right">
+          <div class="col-3 text-right">
             <div class="dropdown">
-              <button class="btn " type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true"
+             <!-- <button class="btn " type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true"
                 aria-expanded="false">
                 <i class="fas fa-user" style="font-size: 200%;"></i>
-              </button>
+              </button>-->
+                
                 <%
             if(log){
           %>
+          <button class="btn " type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true"
+                aria-expanded="false">
+                <i class="fas fa-user" style="font-size: 200%;"></i>
+              </button>
           <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
                <a class="dropdown-item" href="#">mi perfil</a>
                <a class="dropdown-item" href="#">cerrar sesion</a>
@@ -154,30 +150,9 @@
           <%
             }else{
           %>
-              <div class="dropdown-menu dropdown-menu-right zpos">
-                <form class="px-4 py-3" method="post" action="inicio" name="formulario2" onsubmit="return prueba(2)">
-                    <input type="hidden" name="pag" value="index.jsp"/>
-                  <div class="form-group">
-                    <label for="email2">usuario/email<span class="erroruse" style="color: red;"></span></label>
-                    <input type="text" class="form-control" name="log" id="email2"
-                      placeholder="email@ejemplo.com">
-                  </div>
-                  <div class="form-group">
-                    <label for="password2">contraseña</label>
-                    <input type="password" class="form-control" name="pass" id="password2"
-                      placeholder="contraseña">
-                  </div>
-                  <div class="form-group">
-                    <div class="form-check">
-                      
-                    </div>
-                  </div>
-                  <button type="submit" class="btn btn-primary">Entrar</button>
-                </form>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#">crear una cuenta nueva</a>
-                <a class="dropdown-item" href="#">Forgot password?</a>
-              </div>
+              <button type="button" class="btn" data-toggle="modal" data-target="#exampleModal">
+                     <i class="fas fa-user" style="font-size: 200%;"></i>
+                </button>
               <%
             }
           %>
@@ -200,6 +175,7 @@
   <!-- menusito whey -->
 
   <!-- ------------------------contenido-------------------------- -->
+ 
   <!-- ------------------------------------slicer---------------------------- -->
   <div class="container my-3 my-lg-5">
     <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel">
@@ -343,7 +319,41 @@
     </div>
   </div>
   <!-- categorias -->
-
+            <div class="modal fade" id="exampleModal" tabindex="-1"  aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Iniciar sesion</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="px-4 py-3" method="post" action="inicio" id="formulario1" name="formulario1" onsubmit="return prueba(1)">
+                  <input type="hidden" name="pag" value="index.jsp"/>
+              <div class="form-group">
+                  <label for="email1">usuario/email  <span class="erroruse" style="color: red;"></span></label>
+                <input type="text" class="form-control" name="log" id="email1" placeholder="email@ejemplo.com">
+              </div>
+              <div class="form-group">
+                <label for="password1">contraseña</label>
+                <input type="password" class="form-control" name="pass" id="password1" placeholder="contraseña">
+              </div>
+              <div class="form-group">
+                <div class="form-check">
+                  
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary">Entrar</button>
+            </form>
+      </div>
+      <div class="modal-footer">
+                <a class="dropdown-item" href="#">crear una cuenta nueva</a>
+                <a class="dropdown-item" href="#">Forgot password?</a>
+      </div>
+    </div>
+  </div>
+</div>
   <!-- ------------------------contenido-------------------------- -->
   <footer class="footer text-center text-light">
     <!-- Grid container -->
@@ -396,6 +406,7 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF" crossorigin="anonymous"></script>
     -->
+    <script src="js/slicermenonu.js"></script>
 </body>
 
 </html>

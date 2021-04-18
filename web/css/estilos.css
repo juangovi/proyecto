@@ -11,6 +11,9 @@
   background-color: peachpuff;
 
 }
+.modal-dialog{
+    z-index: 1041;
+}
 .footer{
   background-color: rgb(88, 78, 70);
 }
@@ -111,4 +114,7 @@
 }
 .sombreado li{
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.678), 0 6px 20px 0 rgba(0, 0, 0, 0.452);
+}
+.aver{
+    z-index: 0;
 }
