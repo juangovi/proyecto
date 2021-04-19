@@ -26,7 +26,6 @@
                     var errorcon=document.getElementsByClassName("erroruse");
                     console.log(errorcon[0]);
                     errorcon[0].innerHTML="usuario invalido";
-                    errorcon[1].innerHTML="usuario invalido";
                 }
             }
             function crea_query_string(num) {
@@ -52,9 +51,9 @@
                         var respuesta_json=peticion_http.responseText;
                         var usuario= eval("("+respuesta_json+")");
                         if (usuario.length>0){
+                            console.log("jeje boyy");
                             enviar();
                             
-                           
                         }
                        /* for(var x=0; x<categorias.length; x++){
                             var codigo=categorias[x].codigoCategoria;
@@ -66,10 +65,14 @@
                 }
             }
             function enviar(){
-                            if(this.nfo==1)
-                           document.formulario1.submit();
-                            if(this.nfo==2)
-                           document.formulario2.submit();
+                            if(this.nfo==1){
+                                
+                            }
+                           //document.formulario1.submit();
+                            if(this.nfo==2){
+                                
+                            }
+                           //document.formulario2.submit();
             }
             
           
