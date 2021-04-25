@@ -83,5 +83,31 @@ public class coneccion {
         }
         return usuario;
     }
+    
+    public String verificaruser(String user, String passwordcrip) {
+        String json="";
+        try {
+            abriscon();
+            
+            String sql="SELECT * FROM usuarios WHERE (nick='"+user+"' OR email='"+user+"') AND password='"+passwordcrip+"'";
+            pst=cn.prepareStatement(sql);
+            rs=pst.executeQuery();
+            boolean primero=true;
+        while (rs.next()) {
+            if(!primero){
+                json+=",";
+            }
+            primero=false;
+            json+="{usuario:'"+rs.getString("id")+"'}";
+        }
+            cerrarconeccion();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(coneccion.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(coneccion.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return "["+json+"]";
+        
+    }
 }
 

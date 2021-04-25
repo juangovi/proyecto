@@ -1,3 +1,4 @@
+<%@page import="coneccion.coneccion"%>
 <%@page import="java.security.NoSuchAlgorithmException"%>
 <%@page import="java.security.MessageDigest"%>
 <%@page import="java.sql.DriverManager"%>
@@ -33,37 +34,7 @@ String pass=request.getParameter("pass");
         {
             e.printStackTrace();
         }
-    String drv="com.mysql.jdbc.Driver";
-    String db="jdbc:mysql://localhost:3306/vaquerosjd";
-    Connection cn;
-    ResultSet rs=null;
-    Statement sm=null;
-    PreparedStatement pst=null;
-    Class.forName(drv);
-    String json="";
-    cn =DriverManager.getConnection(db,"root","");
-     String sql="SELECT * FROM usuarios WHERE (nick='"+user+"' OR email='"+user+"') AND password='"+generatedPassword+"'";
-        pst=cn.prepareStatement(sql);
-        rs=pst.executeQuery();
-        boolean primero=true;
-        while (rs.next()) {
-            if(!primero){
-                json+=",";
-            }
-            primero=false;
-            json+="{usuario:'"+rs.getString("id")+"'}";
-        }
-    if (rs!=null) {
-            rs.close();
-        }
-        if (sm!=null) {
-            sm.close();
-        }
-        if (pst!=null) {
-            pst.close();
-        }
-        if (cn!=null) {
-            cn.close();
-        }
-        out.print("["+json+"]");
+        coneccion con=new coneccion();
+        String json=con.verificaruser(user,generatedPassword);
+        out.print(json);
 %>
