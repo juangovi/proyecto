@@ -115,6 +115,12 @@
 .sombreado li{
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.678), 0 6px 20px 0 rgba(0, 0, 0, 0.452);
 }
+
+.login {
+  width: 400px;
+  margin: 16px auto;
+  
+}
 .aver{
     z-index: 0;
 }

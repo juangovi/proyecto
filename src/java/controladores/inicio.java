@@ -52,7 +52,8 @@ public class inicio extends HttpServlet {
             {
                 sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
             }
-            //Get complete hashed password in hex format
+            //Get complete hashed password in hex formatasdasd
+            
             generatedPassword = sb.toString();
         } 
         catch (NoSuchAlgorithmException e) 
