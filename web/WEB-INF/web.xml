@@ -8,6 +8,10 @@
         <servlet-name>cerrarSesion</servlet-name>
         <servlet-class>controladores.cerrarSesion</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>nuevousuario</servlet-name>
+        <servlet-class>controladores.nuevousuario</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>inicio</servlet-name>
         <url-pattern>/inicio</url-pattern>
@@ -15,6 +19,10 @@
     <servlet-mapping>
         <servlet-name>cerrarSesion</servlet-name>
         <url-pattern>/cerrarSesion</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>nuevousuario</servlet-name>
+        <url-pattern>/nuevousuario</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

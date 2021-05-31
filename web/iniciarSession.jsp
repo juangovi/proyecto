@@ -8,6 +8,9 @@
 <!doctype html>
 <html lang="en">
     <head>
+        <%
+            
+        %>
         <!-- Required meta tags -->
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -43,21 +46,36 @@
                     REGISTRO
                 </h1>
             </div>
-            <div class="px-5">
-                <form>
+            <div class="px-md-5">
+                <form method="post" action="">
                     <div class="form-group">
                         <label for="usuario">usuario</label>
-                        <input type="text" class="form-control" id="usuario">
+                        <input type="text" name="usuario" class="form-control" id="usuario" required > 
                     </div>
                     <div class="form-group">
                         <label for="email">Email</label>
-                        <input type="email" class="form-control" id="email" >
+                        <input type="email" name="Email" class="form-control" id="email" required>
                     </div>
                     <div class="form-group">
-                        <label for="exampleInputPassword1">Password</label>
-                        <input type="password" class="form-control" id="exampleInputPassword1">
+                        <label for="nombre">nombre</label>
+                        <input type="text" name="nombre" class="form-control" id="nombre" required>
                     </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <div class="form-group">
+                        <label for="apellido">apellido</label>
+                        <input type="text" name="apellido" class="form-control" id="apellido" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">contraseña</label>
+                        <input type="password" name="password" class="form-control" id="exampleInputPassword1" required>
+                    </div>
+                    <input type="hidden" name="geo" id="geo">
+                    
+                    <div class="alert d-none alert-danger" role="alert">
+                       cagaste
+                    </div>
+                    
+                    
+                    <button type="submit" class="btn btn-primary">Registrarse</button>
                 </form>
             </div>
         </div>
@@ -75,4 +93,7 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF" crossorigin="anonymous"></script>
         -->
     </body>
+    <footer>
+        <script src="js/geolocalizacion.js"></script>
+    </footer>
 </html>

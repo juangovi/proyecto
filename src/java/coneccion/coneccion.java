@@ -29,13 +29,13 @@ public class coneccion {
 	private PreparedStatement pst;
         public coneccion() {
     }
-    public void abriscon() throws ClassNotFoundException, SQLException {
+    private void abriscon() throws ClassNotFoundException, SQLException {
 		Class.forName(drv);
 		cn =DriverManager.getConnection(db,"root","");
 		System.out.println("conectado");	
     }
     
-    public void cerrarconeccion() throws SQLException {
+    private void cerrarconeccion() throws SQLException {
 		// TODO Auto-generated method stub
 	if (rs!=null) {
             rs.close();
@@ -108,6 +108,29 @@ public class coneccion {
         }
         return "["+json+"]";
         
+        
+    }
+    public boolean cpedido(Usuario user) throws ClassNotFoundException, SQLException {
+        abriscon();
+        String sql = "INSERT INTO usuarios(nombre, apellidos, nick, email, password, rol, direccion, geoloc, token) VALUES (?,?,?,?,?,?,?,?,?)";
+        pst = cn.prepareStatement(sql);
+        pst.setString(1, user.getNombre());
+        pst.setString(2, user.getApellidos());
+        pst.setString(3, user.getNick());
+        pst.setString(4, user.getEmail());
+        
+        pst.setString(5, user.getPassword());
+        
+        pst.setInt(6, user.getRol());
+        pst.setString(7, user.getDireccion());
+        pst.setString(8, user.getGeoloc());
+        
+        pst.setString(9, user.getToken());
+        
+        
+        pst.executeUpdate();
+        cerrarconeccion();
+        return true;
     }
 }
 
