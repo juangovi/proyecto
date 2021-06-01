@@ -7,6 +7,7 @@
 package controladores;
 
 import coneccion.coneccion;
+import controladores.utiles.Encriptar;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.security.MessageDigest;
@@ -25,12 +26,12 @@ import modelo.Usuario;
  * @author juana
  */
 public class inicio extends HttpServlet {
-   
+    Encriptar encriptar=new Encriptar();
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            String generatedPassword = null;
+            
              ServletContext contexto=getServletContext();
             RequestDispatcher rd;
             String pag=request.getParameter("pag");
@@ -38,29 +39,8 @@ public class inicio extends HttpServlet {
             String password=request.getParameter("pass");
             coneccion con=new coneccion();
             HttpSession sesion=request.getSession();
-            try {
-            // Create MessageDigest instance for MD5
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            //Add password bytes to digest
-            md.update(password.getBytes());
-            //Get the hash's bytes 
-            byte[] bytes = md.digest();
-            //This bytes[] has bytes in decimal format;
-            //Convert it to hexadecimal format
-            StringBuilder sb = new StringBuilder();
-            for(int i=0; i< bytes.length ;i++)
-            {
-                sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
-            }
-            //Get complete hashed password in hex formatasdasd
-            
-            generatedPassword = sb.toString();
-        } 
-        catch (NoSuchAlgorithmException e) 
-        {
-            e.printStackTrace();
-        }
-            Usuario usuario=con.getUser(user,generatedPassword);
+           
+            Usuario usuario=con.getUser(user,encriptar.encriptacion(password));
             if(usuario!=null){
                 sesion.setAttribute("user", usuario);
             }

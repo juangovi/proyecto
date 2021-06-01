@@ -47,7 +47,7 @@
                 </h1>
             </div>
             <div class="px-md-5">
-                <form method="post" action="">
+                <form method="post" action="/nuevousuario">
                     <div class="form-group">
                         <label for="usuario">usuario</label>
                         <input type="text" name="usuario" class="form-control" id="usuario" required > 
@@ -63,6 +63,10 @@
                     <div class="form-group">
                         <label for="apellido">apellido</label>
                         <input type="text" name="apellido" class="form-control" id="apellido" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">direccion</label>
+                        <input type="direccion" name="direccion" class="form-control" id="direccion" required>
                     </div>
                     <div class="form-group">
                         <label for="exampleInputPassword1">contraseña</label>

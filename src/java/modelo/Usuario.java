@@ -38,6 +38,18 @@ public class Usuario {
         this.token = token;
     }
 
+    public Usuario(String nombre, String apellidos, String nick, String email, String password, String direccion, String geoloc, String token, int rol) {
+        this.nombre = nombre;
+        this.apellidos = apellidos;
+        this.nick = nick;
+        this.email = email;
+        this.password = password;
+        this.direccion = direccion;
+        this.geoloc = geoloc;
+        this.token = token;
+        this.rol = rol;
+    }
+    
     public int getId() {
         return id;
     }

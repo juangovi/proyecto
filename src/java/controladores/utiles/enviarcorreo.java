@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package controladores;
+package controladores.utiles;
 
 import java.util.Properties;
 import javax.mail.Address;

@@ -5,6 +5,7 @@
  */
 package coneccion;
 
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -110,8 +111,11 @@ public class coneccion {
         
         
     }
-    public boolean cpedido(Usuario user) throws ClassNotFoundException, SQLException {
-        abriscon();
+    public boolean nuevousuario(Usuario user) throws SQLException, ClassNotFoundException {
+       abriscon();
+        try {
+            
+         
         String sql = "INSERT INTO usuarios(nombre, apellidos, nick, email, password, rol, direccion, geoloc, token) VALUES (?,?,?,?,?,?,?,?,?)";
         pst = cn.prepareStatement(sql);
         pst.setString(1, user.getNombre());
@@ -129,7 +133,12 @@ public class coneccion {
         
         
         pst.executeUpdate();
-        cerrarconeccion();
+        
+        } catch (MySQLIntegrityConstraintViolationException e) {
+            cerrarconeccion();
+            return false;
+        }
+        
         return true;
     }
 }

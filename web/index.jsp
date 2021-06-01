@@ -348,7 +348,7 @@
             </form>
       </div>
       <div class="modal-footer">
-                <a class="dropdown-item" href="#">crear una cuenta nueva</a>
+                <a class="dropdown-item" href="/iniciarSession.jsp">crear una cuenta nueva</a>
                 <a class="dropdown-item" href="#">Forgot password?</a>
       </div>
     </div>
