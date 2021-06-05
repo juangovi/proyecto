@@ -4,10 +4,14 @@
     Author     : juana
 --%>
 
+<%@page import="modelo.Categorias"%>
+<%@page import="java.util.List"%>
+<%@page import="modelo.productos"%>
+<%@page import="coneccion.coneccion"%>
 <%@page import="modelo.Usuario"%>
-<%@page contentType="text/html" pageEncoding="ISO-8859-1"%>
+<%@ page contentType="text/html; charset=UTF-8" %>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <!---------------------codigo----------------------->
@@ -15,7 +19,10 @@
         String nom="iniciar sesion";
         Usuario user=null;
         boolean log=false;
-         HttpSession sesion=request.getSession(); 
+        HttpSession sesion=request.getSession();
+        coneccion con=new coneccion();
+        List<productos> listapro=con.obtenerultimospedidos();
+        List<Categorias> categorias=con.obtenercategorias();
         if(sesion.getAttribute("user")!=null){
                 user=(Usuario)sesion.getAttribute("user");
                 log=true;
@@ -192,7 +199,7 @@
           <img src="img/slicer/WhatsApp Image 2021-03-11 at 11.59.54.jpeg" class="d-block w-100" alt="...">
           <div class="carousel-caption ">
             <h5>todo tipo de pantalones vaqueros</h5>
-            <p>los mejoras de toda andalicía</p>
+            <p>los mejoras de toda andalicÃ­a</p>
           </div>
         </div>
         <div class="carousel-item">
@@ -218,61 +225,32 @@
   <h1 class="text-center font-weight-bold">nuevos productos</h1>
 
   <div class="container mb-5">
-    <div class="card-deck">
-
-      <div class="card sombras">
-        <img src="img/promo/2021-02-28(12).jpg" class="card-img-top" alt="...">
+    <div class="card-deck">  
+        <%
+            for (productos pro : listapro) {
+        %>
+            <div class="card sombras">
+        <img src="<%=pro.getImagen()%>"  width="400" height="300"  class="card-img-top" alt="...">
         <div class="card-body">
-          <h5 class="card-title truncar">Card title</h5>
-          <p class="card-text">Talla:<br>precio:</p>
+          <h5 class="card-title truncar"><%=pro.getDescripcion()%></h5>
+          <p class="card-text">Talla:<br>precio:<%=pro.getPrecio()%>â‚¬</p>
         </div>
-        <a href="#" class="link"><div class=" card-footer text-center">
+        <a href="#" class="link"><div class="card-footer text-center">
           <span class="comprar font-weight-bold">COMPRAR</span>
         </div></a>
       </div>
-
-      <div class="card sombras">
-        <img src="img/promo/2021-02-28(13).jpg" class="card-img-top" alt="...">
-        <div class="card-body">
-          <h5 class="card-title truncar">Card titlle</h5>
-          <p class="card-text">Talla:<br>precio:</p>
-        </div>
-        <a href="#" class="link"><div class=" card-footer text-center">
-          <span class="comprar font-weight-bold">COMPRAR</span>
-        </div></a>
-      </div>
-
-      <div class="card sombras">
-        <img src="img/promo/2021-02-28(18).jpg" class="card-img-top " alt="...">
-        <div class="card-body">
-          <h5 class="card-title truncar">Card title</h5>
-          <p class="card-text">Talla:<br>precio:</p>
-        </div>
-        <a href="#" class="link"><div class=" card-footer text-center">
-          <span class="comprar font-weight-bold">COMPRAR</span>
-        </div></a>
-      </div>
-
-      <div class="card sombras">
-        <img src="img/promo/2021-02-28(41).jpg" class="card-img-top" alt="...">
-        <div class="card-body">
-          <h5 class="card-title truncar">Card title</h5>
-          <p class="card-text">Talla:<br>precio:</p>
-        </div>
-        <a href="#" class="link"><div class=" card-footer text-center">
-          <span class="comprar font-weight-bold">COMPRAR</span>
-        </div></a>
-      </div>
-
+        <%
+            }
+        %>
     </div>
   </div>
   <!-- ----------------------------ultimos------------------------------ -->
 <!-- -----------------------------------------------jumbotron--------------------------------------------- -->
 <div class="jumbo p-5">
   <h1 class="display-4">nuestras tienda</h1>
-  <p class="lead">consulta la ubicación de las tiendas a lo largo de la semana y los horarios disponible de todo el mes</p>
+  <p class="lead">consulta la ubicaciÃ³n de las tiendas a lo largo de la semana y los horarios disponible de todo el mes</p>
   <hr class="my-4">
-  <p>comparte tu ubicación para ver las tiendas mas cercanas para recoger sus pedidos o ver nuestros productos de cerca </p>
+  <p>comparte tu ubicaciÃ³n para ver las tiendas mas cercanas para recoger sus pedidos o ver nuestros productos de cerca </p>
   <a class="btn btn-primary btn-lg" href="#" role="button">ver tiendas</a>
 </div>
 <!-- -----------------------------------------------jumbotron--------------------------------------------- -->
@@ -280,45 +258,28 @@
   <h1 class="text-center font-weight-bold my-5">categorias</h1>
   <div class="container">
     <div class="row row-cols-1 row-cols-md-2">
-      <div class="col mb-4">
+        
+        <%
+            for (Categorias cat : categorias) {
+        %>
+        
+        <div class="col mb-4">
         <div class="card sombras">
-          <img src="img/promo/2021-02-28(18).jpg" class="card-img-top" alt="...">
+            <img src="img/productos/<%=cat.getImg()%>" width="400" height="600" class="card-img-top" alt="...">
           <div class="card-body">
-            <h5 class="card-title">Card title</h5>
+              <h3 class="card-title"><%=cat.getNombre()%></h3>
             <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
           </div>
         </div>
       </div>
-      <div class="col mb-4">
-        <div class="card sombras">
-          <img src="img/promo/2021-02-28(18).jpg" class="card-img-top" alt="...">
-          <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-          </div>
-        </div>
-      </div>
-      <div class="col mb-4">
-        <div class="card sombras">
-          <img src="img/promo/2021-02-28(18).jpg" class="card-img-top" alt="...">
-          <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content.</p>
-          </div>
-        </div>
-      </div>
-      <div class="col mb-4">
-        <div class="card sombras">
-          <img src="img/promo/2021-02-28(18).jpg" class="card-img-top" alt="...">
-          <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-          </div>
-        </div>
-      </div>
+        <%
+            }
+        %>
+    
     </div>
   </div>
   <!-- categorias -->
+  <!-- ventana modal -->
             <div class="modal fade" id="exampleModal" tabindex="-1"  aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -336,8 +297,8 @@
                 <input type="text" class="form-control" name="log" id="email1" placeholder="email@ejemplo.com">
               </div>
               <div class="form-group">
-                <label for="password1">contraseña</label>
-                <input type="password" class="form-control" name="pass" id="password1" placeholder="contraseña">
+                <label for="password1">contraseÃ±a</label>
+                <input type="password" class="form-control" name="pass" id="password1" placeholder="contraseÃ±a">
               </div>
               <div class="form-group">
                 <div class="form-check">
@@ -384,7 +345,7 @@
   
     <!-- Copyright -->
     <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
-      © 2021 Copyright:Juan Antonio Gonzalez vidal
+      Â© 2021 Copyright:Juan Antonio Gonzalez vidal
      
     </div>
     <!-- Copyright -->

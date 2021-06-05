@@ -22,12 +22,12 @@
                 
                 return this.form;
             }
-            function escribir(){
+            function escribir(error){
                 if(!this.form){
                     console.log("entra");
                     var errorcon=document.getElementsByClassName("erroruse");
                     console.log(errorcon[0]);
-                    errorcon[0].innerHTML="usuario invalido";
+                    errorcon[0].innerHTML=error;
                 }
             }
             function cambio(){
@@ -57,11 +57,14 @@
                         var respuesta_json=peticion_http.responseText;
                         var usuario= eval("("+respuesta_json+")");
                         if (usuario.length>0){
-                            console.log("jeje boyy");
-                            enviar();
-                            
+                            console.log(usuario[0]["estado"])
+                            if (usuario[0]["estado"]==0){
+                             escribir("usuario bloqueado");
+                            }else{
+                                enviar();  
+                            }
                         }else{
-                            escribir();
+                            escribir("usuario invalido");
                         }
                        /* for(var x=0; x<categorias.length; x++){
                             var codigo=categorias[x].codigoCategoria;

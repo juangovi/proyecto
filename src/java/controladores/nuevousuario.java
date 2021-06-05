@@ -7,11 +7,14 @@ package controladores;
 
 import coneccion.coneccion;
 import controladores.utiles.Encriptar;
+import controladores.utiles.enviarcorreo;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -33,12 +36,16 @@ public class nuevousuario extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    Encriptar encriptar=new Encriptar();
-    coneccion con=new coneccion();
+   
     
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+         Encriptar encriptar=new Encriptar();
+    coneccion con=new coneccion();
+    ServletContext contexto=getServletContext();
+    RequestDispatcher rd;
+    enviarcorreo correo=new enviarcorreo();
         try (PrintWriter out = response.getWriter()) {
           String usuario=request.getParameter("usuario");
           String Email=request.getParameter("Email");
@@ -49,7 +56,16 @@ public class nuevousuario extends HttpServlet {
           String direccion=request.getParameter("direccion");
           String enpass=encriptar.encriptacion(password);
           Usuario user=new Usuario(nombre, apellido, usuario, Email, enpass, direccion, geo, encriptar.encriptacion(usuario+enpass+Email), 0);
-          con.nuevousuario(user);
+          
+            if (con.nuevousuario(user)) {
+                correo.enviarverificacion(Email, user.getToken());
+                rd=contexto.getRequestDispatcher("/usuariocreado.html");
+                rd.forward(request, response);
+            }else{
+                
+                rd=contexto.getRequestDispatcher("/iniciarSession.jsp?error=0");
+                rd.forward(request, response);
+            }
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(nuevousuario.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {

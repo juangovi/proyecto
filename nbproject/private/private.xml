@@ -3,8 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/git/proyecto/web/js/geolocalizacion.js</file>
+            <file>file:/D:/git/proyecto/web/usuariocreado.html</file>
             <file>file:/D:/git/proyecto/web/iniciarSession.jsp</file>
+            <file>file:/D:/git/proyecto/src/java/controladores/utiles/enviarcorreo.java</file>
+            <file>file:/D:/git/proyecto/src/java/coneccion/coneccion.java</file>
+            <file>file:/D:/git/proyecto/web/confirmarcorreo.jsp</file>
             <file>file:/D:/git/proyecto/web/index.jsp</file>
         </group>
     </open-files>

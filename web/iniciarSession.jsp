@@ -9,7 +9,10 @@
 <html lang="en">
     <head>
         <%
-            
+            boolean error=false;
+            if(request.getParameter("usuario")!=null){
+                error=true;
+            }
         %>
         <!-- Required meta tags -->
         <meta charset="utf-8">
@@ -74,10 +77,16 @@
                     </div>
                     <input type="hidden" name="geo" id="geo">
                     
-                    <div class="alert d-none alert-danger" role="alert">
-                       cagaste
+                    <%
+                        if(error){
+                    %>
+                        
+                    <div class="alert alert-danger" role="alert">
+                       el usuario ya existe pruebe de nuevo
                     </div>
-                    
+                    <%
+                        }
+                    %>
                     
                     <button type="submit" class="btn btn-primary">Registrarse</button>
                 </form>

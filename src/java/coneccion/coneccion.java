@@ -12,9 +12,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import modelo.Categorias;
 import modelo.Usuario;
+import modelo.productos;
 
 /**
  *
@@ -99,7 +103,7 @@ public class coneccion {
                 json+=",";
             }
             primero=false;
-            json+="{usuario:'"+rs.getString("id")+"'}";
+            json+="{usuario:'"+rs.getString("id")+"',estado:'"+rs.getString("estado")+"'}";
         }
             cerrarconeccion();
         } catch (ClassNotFoundException ex) {
@@ -138,8 +142,65 @@ public class coneccion {
             cerrarconeccion();
             return false;
         }
-        
+        cerrarconeccion();
         return true;
+    }
+    
+    public boolean desbloquearusuariotoken(String token) throws ClassNotFoundException, SQLException{
+         abriscon();
+        try {
+            
+         
+        String sql = "UPDATE usuarios SET estado=0 WHERE token=?";
+        pst = cn.prepareStatement(sql);
+        pst.setString(1, token);
+        
+        
+        pst.executeUpdate();
+        
+        } catch (MySQLIntegrityConstraintViolationException e) {
+            cerrarconeccion();
+            return false;
+        }
+        cerrarconeccion();
+        return true;
+        
+    }
+    public List<productos> obtenerultimospedidos() throws ClassNotFoundException, SQLException{
+        List<productos> listapro=new ArrayList<productos>();
+        abriscon();
+        String sql="SELECT * FROM productos ORDER BY id DESC LIMIT 0,4;";
+         pst=cn.prepareStatement(sql);
+         rs=pst.executeQuery();
+         while(rs.next()){
+             int id=rs.getInt("id");
+             int categoria=rs.getInt("categoria");
+             String descripcion=rs.getString("descripcion");
+             double precio=rs.getDouble("precio");
+             String imagen=rs.getString("imagen");
+             productos pro=new productos(id, categoria, descripcion, precio, imagen);
+             listapro.add(pro);
+         }
+         cerrarconeccion();
+         
+        return listapro;
+    }
+    
+    public List<Categorias> obtenercategorias() throws ClassNotFoundException, SQLException{
+        List<Categorias> categorias=new ArrayList<Categorias>();
+        abriscon();
+        String sql="SELECT * FROM categorias";
+        pst=cn.prepareStatement(sql);
+        rs=pst.executeQuery();
+        while (rs.next()) {            
+            int id=rs.getInt("id");
+            String nombre=rs.getString("nombre");
+            String img=rs.getString("img");
+            Categorias cat=new Categorias(id, nombre, img);
+            categorias.add(cat);
+        }
+        cerrarconeccion();
+        return categorias;
     }
 }
 

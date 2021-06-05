@@ -23,7 +23,7 @@ public class enviarcorreo {
     public enviarcorreo() {
     }
     
-    public void sendregistro(String destinatario, String asunto, String cuerpo){
+    public void sendcorreo(String destinatario, String asunto, String cuerpo){
         String remitente = "vaquerosjd@gmail.com";
         Properties props = System.getProperties();
         props.put("mail.smtp.host", "smtp.gmail.com");  //El servidor SMTP de Google
@@ -38,9 +38,8 @@ public class enviarcorreo {
           try {
         message.setFrom(new InternetAddress(remitente));
         message.addRecipients(Message.RecipientType.TO, destinatario);  //Se podrían añadir varios de la misma manera
-        Address[] addresses;
         message.setSubject(asunto);
-        message.setText(cuerpo);
+        message.setContent(cuerpo,"text/html");
         Transport transport = session.getTransport("smtp");
         transport.connect("smtp.gmail.com", remitente, "Lacontra1");
         transport.sendMessage(message, message.getAllRecipients());
@@ -49,6 +48,12 @@ public class enviarcorreo {
     catch (MessagingException me) {
         me.printStackTrace();   //Si se produce un error
     }
+    }
+    public void enviarverificacion(String usuario,String token){
+        String asunto="verifique su cuenta";
+        String link="http://localhost:8084/confirmarcorreo.jsp?tk="+token;
+        String cuarpo="<h1>BIENVENIDO A VAQUEROSJD</h1><p>entre en el siguente enlace para verificar su cuenta</p><a href='"+link+"'>verificar cuenta</a>";
+        sendcorreo(usuario, asunto, cuarpo);
     }
     
 }
