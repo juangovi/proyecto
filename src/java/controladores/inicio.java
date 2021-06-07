@@ -30,14 +30,19 @@ public class inicio extends HttpServlet {
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            
-             ServletContext contexto=getServletContext();
+            ServletContext contexto=getServletContext();
             RequestDispatcher rd;
+            HttpSession sesion=request.getSession();
+            if (sesion.getAttribute("user")!=null) {
+                rd=contexto.getRequestDispatcher("/index.jsp");
+                rd.forward(request, response);
+            }
+             
             String pag=request.getParameter("volver");
             String user=request.getParameter("log");
             String password=request.getParameter("pass");
             coneccion con=new coneccion();
-            HttpSession sesion=request.getSession();
+            
             
             Usuario usuario=con.getUser(user,encriptar.encriptacion(password));
             

@@ -7,17 +7,23 @@ package controladores;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Random;
+import java.util.ArrayList;
+import java.util.List;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import modelo.Linea_pedido;
+import modelo.Usuario;
 
 /**
  *
  * @author juana
  */
-public class NewServlet extends HttpServlet {
+public class comprarproducto extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -32,21 +38,38 @@ public class NewServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            Random rand = new Random();
-            
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet NewServlet</title>");            
-            out.println("</head>");
-            out.println("<body>");
-           for (int i = 1; i <= 100; i++) {
-                //INSERT INTO `tallas` (`id`, `talla`, `cantidad`, `producto`) VALUES (NULL, 'XXS', '23', '1'), (NULL, 'XS', '14', '1'), (NULL, 'S', '32', '1'), (NULL, 'M', '48', '1'), (NULL, 'L', '36', '1'), (NULL, 'XL', '12', '1'), (NULL, 'XL', '44', '1');
-                out.println("INSERT INTO `tallas` (`id`, `talla`, `cantidad`, `producto`) VALUES (NULL, 'XXS', '"+rand.nextInt(50)+"', '"+i+"'), (NULL, 'XS', '"+rand.nextInt(50)+"', '"+i+"'), (NULL, 'S', '"+rand.nextInt(50)+"', '"+i+"'), (NULL, 'M', '"+rand.nextInt(50)+"', '"+i+"'), (NULL, 'L', '"+rand.nextInt(50)+"', '"+i+"'), (NULL, 'XL', '"+rand.nextInt(50)+"', '"+i+"'), (NULL, 'XXL', '"+rand.nextInt(50)+"', '"+i+"');<br>");  
+            ServletContext contexto = getServletContext();
+            RequestDispatcher rd;
+            HttpSession sesion = request.getSession();
+            Usuario user = null;
+            if (sesion.getAttribute("user") == null) {
+                rd = contexto.getRequestDispatcher("/index.jsp");
+                rd.forward(request, response);
+            } else {
+                user = (Usuario) sesion.getAttribute("user");
             }
-            out.println("</body>");
-            out.println("</html>");
+            if (sesion.getAttribute("carrito") == null) {
+                List<Linea_pedido> lista = new ArrayList<Linea_pedido>();
+                sesion.setAttribute("carrito", lista);
+                
+            }
+            List<Linea_pedido> lista = (List<Linea_pedido>) sesion.getAttribute("carrito");
+            int tallaid = Integer.parseInt(request.getParameter("talla"));
+            int productoid = Integer.parseInt(request.getParameter("pro"));
+            Linea_pedido lp = new Linea_pedido(tallaid,productoid);
+           
+            if (lista.contains(lp)) {
+                for (Linea_pedido lista1 : lista) {
+                    if (lista1.equals(lp)) {
+                        lista1.setCantidad(lista1.getCantidad() + 1);
+                    }
+                }
+            } else {
+                lista.add(lp);
+            }
+            sesion.setAttribute("carrito", lista);
+            rd = contexto.getRequestDispatcher("/carrito.jsp");
+            rd.forward(request, response);
         }
     }
 

@@ -217,17 +217,20 @@
                                 precio:<%=producto.getPrecio()%>€
                             </h3>
                         </div>
-                        <select class="form-control form-control-lg my-3">
-                            <%
-                                for (Tallas tallas : lista) {
-                            %>
-                            <option value="<%=tallas.getId()%>"><%=tallas.getTalla()%></option>
-                            <%
-                                }
-                            %>
-                        </select>
+                            <form method="POST" action="comprarproducto">
 
-                        <a href="#" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">añadir al carrito</a>
+                            <select name="talla" class="form-control form-control-lg my-3">
+                                <%
+                                    for (Tallas tallas : lista) {
+                                %>
+                                <option value="<%=tallas.getId()%>"><%=tallas.getTalla()%></option>
+                                <%
+                                    }
+                                %>
+                            </select>
+                            <input type="hidden" name="pro" value="<%=proid%>"/>
+                            <input type="submit" class="btn btn-primary btn-lg active" value="añadir al carrito" role="button" aria-pressed="true"/>
+                        </form>
                     </div>
                 </div>
             </div>

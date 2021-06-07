@@ -16,6 +16,14 @@
         <servlet-name>NewServlet</servlet-name>
         <servlet-class>controladores.NewServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>comprarproducto</servlet-name>
+        <servlet-class>controladores.comprarproducto</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>confirmacion</servlet-name>
+        <servlet-class>controladores.confirmacion</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>inicio</servlet-name>
         <url-pattern>/inicio</url-pattern>
@@ -31,6 +39,14 @@
     <servlet-mapping>
         <servlet-name>NewServlet</servlet-name>
         <url-pattern>/NewServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>comprarproducto</servlet-name>
+        <url-pattern>/comprarproducto</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>confirmacion</servlet-name>
+        <url-pattern>/confirmacion</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

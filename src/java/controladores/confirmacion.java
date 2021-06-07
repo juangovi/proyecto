@@ -5,19 +5,29 @@
  */
 package controladores;
 
+import coneccion.coneccion;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Random;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import modelo.Linea_pedido;
+import modelo.Pedido;
+import modelo.Usuario;
 
 /**
  *
  * @author juana
  */
-public class NewServlet extends HttpServlet {
+public class confirmacion extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -33,20 +43,31 @@ public class NewServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            Random rand = new Random();
-            
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet NewServlet</title>");            
-            out.println("</head>");
-            out.println("<body>");
-           for (int i = 1; i <= 100; i++) {
-                //INSERT INTO `tallas` (`id`, `talla`, `cantidad`, `producto`) VALUES (NULL, 'XXS', '23', '1'), (NULL, 'XS', '14', '1'), (NULL, 'S', '32', '1'), (NULL, 'M', '48', '1'), (NULL, 'L', '36', '1'), (NULL, 'XL', '12', '1'), (NULL, 'XL', '44', '1');
-                out.println("INSERT INTO `tallas` (`id`, `talla`, `cantidad`, `producto`) VALUES (NULL, 'XXS', '"+rand.nextInt(50)+"', '"+i+"'), (NULL, 'XS', '"+rand.nextInt(50)+"', '"+i+"'), (NULL, 'S', '"+rand.nextInt(50)+"', '"+i+"'), (NULL, 'M', '"+rand.nextInt(50)+"', '"+i+"'), (NULL, 'L', '"+rand.nextInt(50)+"', '"+i+"'), (NULL, 'XL', '"+rand.nextInt(50)+"', '"+i+"'), (NULL, 'XXL', '"+rand.nextInt(50)+"', '"+i+"');<br>");  
+            HttpSession sesion = request.getSession();
+            ServletContext contexto=getServletContext();
+            RequestDispatcher rd;
+            coneccion con=new coneccion();
+            if (sesion.getAttribute("user") == null) {
+                rd=contexto.getRequestDispatcher("/index.jsp");
+                rd.forward(request, response);
             }
-            out.println("</body>");
-            out.println("</html>");
+            Usuario user=(Usuario) sesion.getAttribute("user");
+            if (sesion.getAttribute("carrito") == null) {
+                rd=contexto.getRequestDispatcher("/catalogo.jsp");
+                rd.forward(request, response);
+            }
+            List<Linea_pedido> lista = (List<Linea_pedido>) sesion.getAttribute("carrito");
+            Pedido pedido=new Pedido(user.getId(), lista);
+            pedido.generarcodigopedido();
+            try {
+                con.hacerpedido(pedido);
+            } catch (ClassNotFoundException ex) {
+                System.out.println("ojo");
+                Logger.getLogger(confirmacion.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                System.out.println(pedido.getCodigopedido());
+                Logger.getLogger(confirmacion.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 

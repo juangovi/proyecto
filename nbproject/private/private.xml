@@ -3,10 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/git/proyecto/src/java/modelo/Tallas.java</file>
+            <file>file:/D:/git/proyecto/src/java/modelo/Pedido.java</file>
+            <file>file:/D:/git/proyecto/src/java/controladores/inicio.java</file>
+            <file>file:/D:/git/proyecto/src/java/controladores/confirmacion.java</file>
             <file>file:/D:/git/proyecto/src/java/coneccion/coneccion.java</file>
-            <file>file:/D:/git/proyecto/src/java/modelo/Paginacion.java</file>
-            <file>file:/D:/git/proyecto/web/comprarproducto.jsp</file>
+            <file>file:/D:/git/proyecto/web/carrito.jsp</file>
         </group>
     </open-files>
 </project-private>

@@ -4,9 +4,9 @@
     Author     : juana
 --%>
 
-<%@page import="modelo.Paginacion"%>
+<%@page import="modelo.Tallas"%>
 <%@page import="java.util.ArrayList"%>
-<%@page import="java.util.Arrays"%>
+<%@page import="modelo.Linea_pedido"%>
 <%@page import="modelo.Categorias"%>
 <%@page import="java.util.List"%>
 <%@page import="modelo.productos"%>
@@ -19,24 +19,21 @@
     <head>
         <!---------------------codigo----------------------->
         <%
-            
             String nom = "iniciar sesion";
             Usuario user = null;
             boolean log = false;
             HttpSession sesion = request.getSession();
-            
             coneccion con = new coneccion();
-            List<Categorias> categorias=con.obtenercategorias();
-            Paginacion res = con.todoslosproductospaginados(request,categorias);
-            
+            if (sesion.getAttribute("carrito") == null) {
+                List<Linea_pedido> lista = new ArrayList<Linea_pedido>();
+                sesion.setAttribute("carrito", lista);
+            }
+            List<Linea_pedido> lista = (List<Linea_pedido>) sesion.getAttribute("carrito");
             if (sesion.getAttribute("user") != null) {
                 user = (Usuario) sesion.getAttribute("user");
                 log = true;
                 nom = user.getNombre();
             }
-            System.out.println(request.getQueryString());
-            
-            
         %>
         <!---------------------codigo----------------------->
         <!-- Required meta tags -->
@@ -183,201 +180,55 @@
         <!-- menusito whey -->
         <div id="mySidenav" class="sidenav">
             <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-             <a href="index.jsp">inicio</a>
+            <a href="index.jsp">inicio</a>
             <a href="catalogo.jsp">catalogo</a>
         </div>
         <!-- menusito whey -->
 
         <!-- ------------------------contenido-------------------------- -->
-        <div class="container-fluid">
+        <div class="container rounded sombras my-5 py-3 bg-white">
+            <%
+                double total = 0;
 
-
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="container my-5">
-                        <div class="tarjeta sombras rounded">
-                            <div class="card-body">
-                                <h3 class="card-title text-center">filtrar contenido</h3>
-                                <div class="card-text">
-                                    <form action="" method="get">
-                                        <h5 class="card-title text-center">buscar</h5>
-                                        <input type="text" name="busqueda" class="form-control" id="text">
-                                        
-                                        <h5 class="card-title text-center">Ropa</h5>
-                                        <%
-                                            for (Categorias cat : categorias) {
-                                                String select="";
-                                                if(request.getParameter("categoria"+cat.getId())!=null){
-                                                    select="checked";
-                                                }
-                                        %>
-                                        <div class="form-check">
-                                            <input class="form-check-input" <%=select%> type="checkbox" name="categoria<%=cat.getId()%>" value="<%=cat.getId()%>" id="<%=cat.getNombre()%>">
-                                            <label class="form-check-label" for="<%=cat.getNombre()%>">
-                                                <%=cat.getNombre()%>
-                                            </label>
-                                        </div>
-                                         <%
-                                            }
-                                        %>
-                                        <input type="submit" name="boton" class="btn btn-light" value="buscar"/>
-                                    </form>
-                                </div>
-
-                            </div>
+                for (Linea_pedido lp : lista) {
+                    Tallas talla = con.obtenertalla(lp.getTalla());
+                    total += lp.getProducto().getPrecio();
+            %>
+            <div class="card mb-3">
+                <div class="row">
+                    <div class="col-md-2">
+                        <img src="<%=lp.getProducto().getImagen()%>" class="img-fluid" alt="...">
+                    </div>
+                    <div class="col-md-7">
+                        <div class="card-body">
+                            <h5 class="card-title text-truncate"><%=lp.getProducto().getDescripcion()%></h5>
+                            <p class="card-text">precio: <%=lp.getProducto().getPrecio()%></p>
+                            <p class="card-text">talla: <%=talla.getTalla()%></p>
                         </div>
                     </div>
-                    
-                </div>
-                <div class="col-md-9">
-                    <div class="container-fluid tarjeta my-5 sombras py-4 rounded">
-                        <div class="row row-cols-1 row-cols-md-3">
-                            <%
-                                for (productos pro : res.getListapro()) {
-                            %>
-                            <div class="col mb-4">
-                                <div class="card h-100">
-                                    <img src="<%=pro.getImagen()%>" width="400" height="600" class="card-img-top" alt="">
-                                    <div class="card-body">
-                                        <h5 class="card-title"><%=pro.getDescripcion()%></h5>
-                                        <p class="card-text">precio:<%=pro.getPrecio()%>€</p>
-                                    </div>
-                                    <%
-                                        if (log) {
-                                    %>
-                                    <a href="/comprarproducto.jsp?pro=<%=pro.getId()%>" class="link"><div class="card-footer text-center">
-                                            <span class="comprar font-weight-bold">COMPRAR</span>
-                                        </div></a>
-
-                                    <%
-                                    } else {
-                                    %>
-                                    <div class="card-footer text-center">
-                                        <span class="comprar font-weight-bold">iniciar sesion</span>
-                                    </div>
-                                    <%
-                                        }
-                                    %>
-                                </div>
-                            </div>
-                            <%
-                                }
-                            %>
-
-
+                    <div class="col-md-3 text-center">
+                        <div class="container my-5">
+                            cantidad:x<%=lp.getCantidad()%>
+                            <a href="#" class="btn" aria-label="Close">X</a>
                         </div>
+
                     </div>
                 </div>
             </div>
-            <div>
-                <nav aria-label="..." style="margin: auto;"> 
-                    <ul class="pagination justify-content-center sombreado">
-                        <%
-                            String first = "";
-                            if (res.getPag() <= 1) {
-                                first = "disabled";
-                            }
-                        %>
-                        <li class="page-item <%=first%>">
-                            <a class="page-link" href="catalogo.jsp?<%=request.getQueryString()%>&pag=<%=res.getPag() - 1%>">atras</a>
-                        </li>
-                        <%
-                            for (int paginas = 1; paginas <= res.getNumpag(); paginas++) {
-                                String active = "";
-                                if (paginas == res.getPag()) {
-                                    active = "active";
-                                }
-
-                        %>
-                        <li class="page-item <%=active%>"><a class="page-link" href="catalogo.jsp?<%=request.getQueryString()%>&pag=<%=paginas%>"><%=paginas%></a></li>
-                            <%
-                                }
-                                String last = "";
-                                if (res.getNumpag() <= res.getPag()) {
-
-                                    last = "disabled";
-                                }
-                            %>
-                            
-                        <li class="page-item <%=last%>">
-                            <a class="page-link" href="catalogo.jsp?<%=request.getQueryString()%>&pag=<%=res.getPag() + 1%>">siguiente</a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-
-        </div>
-        <!-- ventana modal -->
-        <div class="modal fade" id="exampleModal" tabindex="-1"  aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Iniciar sesion</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form class="px-4 py-3" method="post" action="inicio" id="formulario1" name="formulario1" onsubmit="return prueba(1)">
-                            <input type="hidden" name="volver" value="catalogo.jsp"/>
-                            <div class="form-group">
-                                <label for="email1">usuario/email  <span class="erroruse" style="color: red;"></span></label>
-                                <input type="text" class="form-control" name="log" id="email1" placeholder="email@ejemplo.com">
-                            </div>
-                            <div class="form-group">
-                                <label for="password1">contraseña</label>
-                                <input type="password" class="form-control" name="pass" id="password1" placeholder="contraseña">
-                            </div>
-                            <div class="form-group">
-                                <div class="form-check">
-
-                                </div>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Entrar</button>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <a class="dropdown-item" href="/iniciarSession.jsp">crear una cuenta nueva</a>
-                        <a class="dropdown-item" href="#">Forgot password?</a>
-                    </div>
-                </div>
+            <%
+                }
+            %>
+            <div class="text-center">
+                <h3>total:<%=total%>€</h3>
             </div>
         </div>
+        <div class="container text-center">
+            <a class="btn btn-success mb-2" href="inicio" role="button">seguir comprando</a><br>
+            <a class="btn btn-success mb-5" href="confirmacion" role="button">comfirmar reserva</a><br>
+            
+        </div>
+
         <!-- ------------------------contenido-------------------------- -->
-        <footer class="footer text-center text-light">
-            <!-- Grid container -->
-            <div class="container p-4 pb-0">
-                <!-- Section: Social media -->
-                <section class="mb-4">
-                    <!-- Facebook -->
-                    <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"
-                       ><i class="fab fa-facebook-f"></i>
-                    </a>
-                    <!-- Instagram -->
-                    <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"
-                       ><i class="fab fa-instagram"></i>
-                    </a>
-                    <!-- mail -->
-                    <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"
-                       ><i class="fas fa-at"></i>
-                    </a>
-                    <!-- yo -->
-                    <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"
-                       ><i class="fas fa-user-tie"></i>
-                    </a>
-
-                </section>
-                <!-- Section: Social media -->
-            </div>
-            <!-- Grid container -->
-
-            <!-- Copyright -->
-            <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
-                © 2021 Copyright:Juan Antonio Gonzalez vidal
-
-            </div>
-            <!-- Copyright -->
-        </footer>
 
         <!-- Optional JavaScript; choose one of the two! -->
 
