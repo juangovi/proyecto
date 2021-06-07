@@ -1,4 +1,11 @@
 <%-- 
+    Document   : comprarproducto
+    Created on : 06-jun-2021, 13:45:23
+    Author     : juana
+--%>
+
+<%@page import="modelo.Tallas"%>
+<%-- 
     Document   : index
     Created on : 24-mar-2021, 10:51:55
     Author     : juana
@@ -21,8 +28,15 @@
             boolean log = false;
             HttpSession sesion = request.getSession();
             coneccion con = new coneccion();
-            List<productos> listapro = con.obtenerultimospedidos();
-            List<Categorias> categorias = con.obtenercategorias();
+            if (request.getParameter("pro") == null) {
+                ServletContext contexto = getServletContext();
+                RequestDispatcher rd;
+                rd = contexto.getRequestDispatcher("/catalogo.jsp");
+                rd.forward(request, response);
+            }
+            String proid = request.getParameter("pro");
+            productos producto = con.obtenerproducto(proid);
+            List<Tallas> lista = con.obtenertallas(producto.getId());
             if (sesion.getAttribute("user") != null) {
                 user = (Usuario) sesion.getAttribute("user");
                 log = true;
@@ -176,120 +190,48 @@
             <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
             <a href="index.jsp">inicio</a>
             <a href="catalogo.jsp">catalogo</a>
+            <a href="catalogo.jsp">carrito</a>
         </div>
         <!-- menusito whey -->
 
         <!-- ------------------------contenido-------------------------- -->
-
-        <!-- ------------------------------------slicer---------------------------- -->
-        <div class="container my-3 my-lg-5">
-            <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel">
-
-                <div class="carousel-inner border border-white zpos sombras">
-                    <div class="carousel-item active">
-                        <img src="img/slicer/WhatsApp Image 2021-03-09 at 10.23.48.jpeg" class="d-block w-100" alt="...">
-                        <div class="carousel-caption ">
-                            <h5>ULTIMO EN MODA</h5>
-                            <p>compra tu ropa siempre a la moda</p>
-                        </div>
+        <div class="container my-2 my-md-5 bg-white rounded sombras">
+            <div class="text-center">
+                <h1 class="font-weight-bold">
+                    COMPRAR
+                </h1>
+            </div>
+            <div class="container-fluid my-3">
+                <div class="row">
+                    <div class="col-md-5 my-3">
+                        <img src="<%=producto.getImagen()%>" class="img-fluid"><br>
                     </div>
-                    <div class="carousel-item">
-                        <img src="img/slicer/WhatsApp Image 2021-03-11 at 11.59.54.jpeg" class="d-block w-100" alt="...">
-                        <div class="carousel-caption ">
-                            <h5>todo tipo de pantalones vaqueros</h5>
-                            <p>los mejoras de toda andalicía</p>
+                    <div class="col-md-7">
+                        <div class="text-center">
+                            <h2>
+                                <%=producto.getDescripcion()%>
+                            </h2>
                         </div>
-                    </div>
-                    <div class="carousel-item">
-                        <img src="img/slicer/WhatsApp Image 2021-03-10 at 13.09.19.jpeg" class="d-block w-100" alt="...">
-                        <div class="carousel-caption ">
-                            <h5>reserva tus pedidos</h5>
-                            <p>rapido nos lo quitan de las manos</p>
+                        <div class="my-5">
+                            <h3>
+                                precio:<%=producto.getPrecio()%>€
+                            </h3>
                         </div>
+                        <select class="form-control form-control-lg my-3">
+                            <%
+                                for (Tallas tallas : lista) {
+                            %>
+                            <option value="<%=tallas.getId()%>"><%=tallas.getTalla()%></option>
+                            <%
+                                }
+                            %>
+                        </select>
+
+                        <a href="#" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">añadir al carrito</a>
                     </div>
                 </div>
-                <a class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="sr-only">Previous</span>
-                </a>
-                <a class="carousel-control-next" href="#carouselExampleCaptions" role="button" data-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="sr-only">Next</span>
-                </a>
             </div>
         </div>
-        <!-- ------------------------------------slicer---------------------------- -->
-        <!-- ----------------------------ultimos------------------------------ -->
-        <h1 class="text-center font-weight-bold">nuevos productos</h1>
-
-        <div class="container mb-5">
-            <div class="card-deck">  
-                <%
-                    for (productos pro : listapro) {
-                %>
-                <div class="card sombras">
-                    <img src="<%=pro.getImagen()%>"  width="400" height="300"  class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <h5 class="card-title truncar"><%=pro.getDescripcion()%></h5>
-                        <p class="card-text">Talla:<br>precio:<%=pro.getPrecio()%>€</p>
-                    </div>
-                    <%
-                        if (log) {
-                    %>
-                    <a href="/comprarproducto.jsp?pro=<%=pro.getId()%>" class="link"><div class="card-footer text-center">
-                            <span class="comprar font-weight-bold">COMPRAR</span>
-                        </div></a>
-
-                    <%
-                    } else {
-                    %>
-                    <div class="card-footer text-center">
-                        <span class="comprar font-weight-bold">iniciar sesion</span>
-                    </div>
-                    <%
-                        }
-                    %>
-                </div>
-                <%
-                    }
-                %>
-            </div>
-        </div>
-        <!-- ----------------------------ultimos------------------------------ -->
-        <!-- -----------------------------------------------jumbotron--------------------------------------------- -->
-        <div class="jumbo p-5">
-            <h1 class="display-4">nuestras tienda</h1>
-            <p class="lead">consulta la ubicación de las tiendas a lo largo de la semana y los horarios disponible de todo el mes</p>
-            <hr class="my-4">
-            <p>comparte tu ubicación para ver las tiendas mas cercanas para recoger sus pedidos o ver nuestros productos de cerca </p>
-            <a class="btn btn-primary btn-lg" href="#" role="button">ver tiendas</a>
-        </div>
-        <!-- -----------------------------------------------jumbotron--------------------------------------------- -->
-        <!-- categorias -->
-        <h1 class="text-center font-weight-bold my-5">categorias</h1>
-        <div class="container">
-            <div class="row row-cols-1 row-cols-md-2">
-
-                <%
-                    for (Categorias cat : categorias) {
-                %>
-
-                <div class="col mb-4">
-                    <div class="card sombras">
-                        <img src="img/productos/<%=cat.getImg()%>" width="400" height="600" class="card-img-top" alt="...">
-                        <div class="card-body">
-                            <h3 class="card-title"><%=cat.getNombre()%></h3>
-                            <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                        </div>
-                    </div>
-                </div>
-                <%
-                    }
-                %>
-
-            </div>
-        </div>
-        <!-- categorias -->
         <!-- ventana modal -->
         <div class="modal fade" id="exampleModal" tabindex="-1"  aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -302,7 +244,7 @@
                     </div>
                     <div class="modal-body">
                         <form class="px-4 py-3" method="post" action="inicio" id="formulario1" name="formulario1" onsubmit="return prueba(1)">
-                            <input type="hidden" name="volver" value="index.jsp"/>
+                            <input type="hidden" name="volver" value="comprarproducto.jsp?pro=<%=producto.getId()%>"/>
                             <div class="form-group">
                                 <label for="email1">usuario/email  <span class="erroruse" style="color: red;"></span></label>
                                 <input type="text" class="form-control" name="log" id="email1" placeholder="email@ejemplo.com">

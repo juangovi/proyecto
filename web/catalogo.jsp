@@ -4,6 +4,9 @@
     Author     : juana
 --%>
 
+<%@page import="modelo.Paginacion"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="java.util.Arrays"%>
 <%@page import="modelo.Categorias"%>
 <%@page import="java.util.List"%>
 <%@page import="modelo.productos"%>
@@ -16,18 +19,21 @@
     <head>
         <!---------------------codigo----------------------->
         <%
+            
             String nom = "iniciar sesion";
             Usuario user = null;
             boolean log = false;
             HttpSession sesion = request.getSession();
+            
             coneccion con = new coneccion();
-            List<productos> listapro = con.obtenerultimospedidos();
-            List<Categorias> categorias = con.obtenercategorias();
+            Paginacion res = con.todoslosproductospaginados(request);
+            
             if (sesion.getAttribute("user") != null) {
                 user = (Usuario) sesion.getAttribute("user");
                 log = true;
                 nom = user.getNombre();
             }
+            
         %>
         <!---------------------codigo----------------------->
         <!-- Required meta tags -->
@@ -174,122 +180,204 @@
         <!-- menusito whey -->
         <div id="mySidenav" class="sidenav">
             <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-            <a href="index.jsp">inicio</a>
+             <a href="index.jsp">inicio</a>
             <a href="catalogo.jsp">catalogo</a>
         </div>
         <!-- menusito whey -->
 
         <!-- ------------------------contenido-------------------------- -->
+        <div class="container-fluid">
 
-        <!-- ------------------------------------slicer---------------------------- -->
-        <div class="container my-3 my-lg-5">
-            <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel">
 
-                <div class="carousel-inner border border-white zpos sombras">
-                    <div class="carousel-item active">
-                        <img src="img/slicer/WhatsApp Image 2021-03-09 at 10.23.48.jpeg" class="d-block w-100" alt="...">
-                        <div class="carousel-caption ">
-                            <h5>ULTIMO EN MODA</h5>
-                            <p>compra tu ropa siempre a la moda</p>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="container my-5">
+                        <div class="tarjeta sombras rounded">
+                            <div class="card-body">
+                                <h3 class="card-title text-center">filtrar contenido</h3>
+                                <h5 class="card-title text-center">genero</h5>
+                                <div class="card-text">
+                                    <form action="" method="get">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                                            <label class="form-check-label" for="defaultCheck1">
+                                                Hombre
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                                            <label class="form-check-label" for="defaultCheck1">
+                                                mujer
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                                            <label class="form-check-label" for="defaultCheck1">
+                                                todo
+                                            </label>
+                                        </div>
+                                        <h5 class="card-title text-center">Ropa</h5>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                                            <label class="form-check-label" for="defaultCheck1">
+                                                pantalones
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                                            <label class="form-check-label" for="defaultCheck1">
+                                                pantalones vaqueros
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                                            <label class="form-check-label" for="defaultCheck1">
+                                                pantalones cortos
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                                            <label class="form-check-label" for="defaultCheck1">
+                                                faldas
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                                            <label class="form-check-label" for="defaultCheck1">
+                                                camisas
+                                            </label>
+                                        </div>
+                                        <h5 class="card-title text-center">tallas</h5>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                                            <label class="form-check-label" for="defaultCheck1">
+                                                camisas
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                                            <label class="form-check-label" for="defaultCheck1">
+                                                camisas
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                                            <label class="form-check-label" for="defaultCheck1">
+                                                camisas
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                                            <label class="form-check-label" for="defaultCheck1">
+                                                camisas
+                                            </label>
+                                        </div>
+
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                                            <label class="form-check-label" for="defaultCheck1">
+                                                camisas
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                                            <label class="form-check-label" for="defaultCheck1">
+                                                camisas
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                                            <label class="form-check-label" for="defaultCheck1">
+                                                camisas
+                                            </label>
+                                        </div>
+
+                                    </form>
+                                </div>
+
+                            </div>
                         </div>
                     </div>
-                    <div class="carousel-item">
-                        <img src="img/slicer/WhatsApp Image 2021-03-11 at 11.59.54.jpeg" class="d-block w-100" alt="...">
-                        <div class="carousel-caption ">
-                            <h5>todo tipo de pantalones vaqueros</h5>
-                            <p>los mejoras de toda andalicía</p>
-                        </div>
-                    </div>
-                    <div class="carousel-item">
-                        <img src="img/slicer/WhatsApp Image 2021-03-10 at 13.09.19.jpeg" class="d-block w-100" alt="...">
-                        <div class="carousel-caption ">
-                            <h5>reserva tus pedidos</h5>
-                            <p>rapido nos lo quitan de las manos</p>
+                    
+                </div>
+                <div class="col-md-9">
+                    <div class="container-fluid tarjeta my-5 sombras py-4 rounded">
+                        <div class="row row-cols-1 row-cols-md-3">
+                            <%
+                                for (productos pro : res.getListapro()) {
+                            %>
+                            <div class="col mb-4">
+                                <div class="card h-100">
+                                    <img src="<%=pro.getImagen()%>" width="400" height="600" class="card-img-top" alt="">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><%=pro.getDescripcion()%></h5>
+                                        <p class="card-text">precio:<%=pro.getPrecio()%>€</p>
+                                    </div>
+                                    <%
+                                        if (log) {
+                                    %>
+                                    <a href="/comprarproducto.jsp?pro=<%=pro.getId()%>" class="link"><div class="card-footer text-center">
+                                            <span class="comprar font-weight-bold">COMPRAR</span>
+                                        </div></a>
+
+                                    <%
+                                    } else {
+                                    %>
+                                    <div class="card-footer text-center">
+                                        <span class="comprar font-weight-bold">iniciar sesion</span>
+                                    </div>
+                                    <%
+                                        }
+                                    %>
+                                </div>
+                            </div>
+                            <%
+                                }
+                            %>
+
+
                         </div>
                     </div>
                 </div>
-                <a class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="sr-only">Previous</span>
-                </a>
-                <a class="carousel-control-next" href="#carouselExampleCaptions" role="button" data-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="sr-only">Next</span>
-                </a>
             </div>
-        </div>
-        <!-- ------------------------------------slicer---------------------------- -->
-        <!-- ----------------------------ultimos------------------------------ -->
-        <h1 class="text-center font-weight-bold">nuevos productos</h1>
+            <div>
+                <nav aria-label="..." style="margin: auto;"> 
+                    <ul class="pagination justify-content-center sombreado">
+                        <%
+                            String first = "";
+                            if (res.getPag() <= 1) {
+                                first = "disabled";
+                            }
+                        %>
+                        <li class="page-item <%=first%>">
+                            <a class="page-link" href="catalogo.jsp?pag=<%=res.getPag() - 1%>">atras</a>
+                        </li>
+                        <%
+                            for (int paginas = 1; paginas <= res.getNumpag(); paginas++) {
+                                String active = "";
+                                if (paginas == res.getPag()) {
+                                    active = "active";
+                                }
 
-        <div class="container mb-5">
-            <div class="card-deck">  
-                <%
-                    for (productos pro : listapro) {
-                %>
-                <div class="card sombras">
-                    <img src="<%=pro.getImagen()%>"  width="400" height="300"  class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <h5 class="card-title truncar"><%=pro.getDescripcion()%></h5>
-                        <p class="card-text">Talla:<br>precio:<%=pro.getPrecio()%>€</p>
-                    </div>
-                    <%
-                        if (log) {
-                    %>
-                    <a href="/comprarproducto.jsp?pro=<%=pro.getId()%>" class="link"><div class="card-footer text-center">
-                            <span class="comprar font-weight-bold">COMPRAR</span>
-                        </div></a>
+                        %>
+                        <li class="page-item <%=active%>"><a class="page-link" href="catalogo.jsp?pag=<%=paginas%>"><%=paginas%></a></li>
+                            <%
+                                }
+                                String last = "";
+                                if (res.getNumpag() <= res.getPag()) {
 
-                    <%
-                    } else {
-                    %>
-                    <div class="card-footer text-center">
-                        <span class="comprar font-weight-bold">iniciar sesion</span>
-                    </div>
-                    <%
-                        }
-                    %>
-                </div>
-                <%
-                    }
-                %>
+                                    last = "disabled";
+                                }
+                            %>
+
+                        <li class="page-item <%=last%>">
+                            <a class="page-link" href="catalogo.jsp?pag=<%=res.getPag() + 1%>">siguiente</a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
-        </div>
-        <!-- ----------------------------ultimos------------------------------ -->
-        <!-- -----------------------------------------------jumbotron--------------------------------------------- -->
-        <div class="jumbo p-5">
-            <h1 class="display-4">nuestras tienda</h1>
-            <p class="lead">consulta la ubicación de las tiendas a lo largo de la semana y los horarios disponible de todo el mes</p>
-            <hr class="my-4">
-            <p>comparte tu ubicación para ver las tiendas mas cercanas para recoger sus pedidos o ver nuestros productos de cerca </p>
-            <a class="btn btn-primary btn-lg" href="#" role="button">ver tiendas</a>
-        </div>
-        <!-- -----------------------------------------------jumbotron--------------------------------------------- -->
-        <!-- categorias -->
-        <h1 class="text-center font-weight-bold my-5">categorias</h1>
-        <div class="container">
-            <div class="row row-cols-1 row-cols-md-2">
 
-                <%
-                    for (Categorias cat : categorias) {
-                %>
-
-                <div class="col mb-4">
-                    <div class="card sombras">
-                        <img src="img/productos/<%=cat.getImg()%>" width="400" height="600" class="card-img-top" alt="...">
-                        <div class="card-body">
-                            <h3 class="card-title"><%=cat.getNombre()%></h3>
-                            <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                        </div>
-                    </div>
-                </div>
-                <%
-                    }
-                %>
-
-            </div>
         </div>
-        <!-- categorias -->
         <!-- ventana modal -->
         <div class="modal fade" id="exampleModal" tabindex="-1"  aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -302,7 +390,7 @@
                     </div>
                     <div class="modal-body">
                         <form class="px-4 py-3" method="post" action="inicio" id="formulario1" name="formulario1" onsubmit="return prueba(1)">
-                            <input type="hidden" name="volver" value="index.jsp"/>
+                            <input type="hidden" name="volver" value="catalogo.jsp"/>
                             <div class="form-group">
                                 <label for="email1">usuario/email  <span class="erroruse" style="color: red;"></span></label>
                                 <input type="text" class="form-control" name="log" id="email1" placeholder="email@ejemplo.com">

@@ -10,8 +10,7 @@ import coneccion.coneccion;
 import controladores.utiles.Encriptar;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -34,13 +33,14 @@ public class inicio extends HttpServlet {
             
              ServletContext contexto=getServletContext();
             RequestDispatcher rd;
-            String pag=request.getParameter("pag");
+            String pag=request.getParameter("volver");
             String user=request.getParameter("log");
             String password=request.getParameter("pass");
             coneccion con=new coneccion();
             HttpSession sesion=request.getSession();
-           
+            
             Usuario usuario=con.getUser(user,encriptar.encriptacion(password));
+            
             if(usuario!=null){
                 sesion.setAttribute("user", usuario);
             }

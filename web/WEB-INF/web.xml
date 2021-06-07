@@ -12,6 +12,10 @@
         <servlet-name>nuevousuario</servlet-name>
         <servlet-class>controladores.nuevousuario</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>NewServlet</servlet-name>
+        <servlet-class>controladores.NewServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>inicio</servlet-name>
         <url-pattern>/inicio</url-pattern>
@@ -23,6 +27,10 @@
     <servlet-mapping>
         <servlet-name>nuevousuario</servlet-name>
         <url-pattern>/nuevousuario</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>NewServlet</servlet-name>
+        <url-pattern>/NewServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

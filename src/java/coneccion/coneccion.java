@@ -16,7 +16,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.http.HttpServletRequest;
 import modelo.Categorias;
+import modelo.Paginacion;
+import modelo.Tallas;
 import modelo.Usuario;
 import modelo.productos;
 
@@ -202,5 +205,76 @@ public class coneccion {
         cerrarconeccion();
         return categorias;
     }
+    public Paginacion todoslosproductospaginados(HttpServletRequest request) throws ClassNotFoundException, SQLException{
+        List<productos> listapro=new ArrayList<productos>();
+        abriscon();
+        int resporpag=9;
+        int pag;
+        
+        if (request==null || request.getParameter("pag")==null) {
+            pag=1;
+        }else{
+            pag=Integer.parseInt(request.getParameter("pag"));
+        }
+        String sql="SELECT COUNT(*) res FROM productos";
+         pst=cn.prepareStatement(sql);
+         rs=pst.executeQuery();
+         rs.next();
+         int numpag=rs.getInt("res")/resporpag;
+         if((rs.getInt("res")%resporpag)>0)
+             numpag++;
+         int firspag =(pag-1)*resporpag;
+         sql="SELECT * FROM productos LIMIT "+firspag+" , "+resporpag;
+         pst=cn.prepareStatement(sql);
+         rs=pst.executeQuery();
+         while(rs.next()){
+             int id=rs.getInt("id");
+             int categoria=rs.getInt("categoria");
+             String descripcion=rs.getString("descripcion");
+             double precio=rs.getDouble("precio");
+             String imagen=rs.getString("imagen");
+             productos pro=new productos(id, categoria, descripcion, precio, imagen);
+             listapro.add(pro);
+         }
+         cerrarconeccion();
+         Paginacion paginacion=new Paginacion(listapro, numpag, pag);
+        return paginacion;
+    }
+    
+    public productos obtenerproducto(String id) throws ClassNotFoundException, SQLException{
+        productos pro = null;
+        abriscon();
+        String sql="SELECT * FROM productos WHERE id = "+id;
+         pst=cn.prepareStatement(sql);
+         rs=pst.executeQuery();
+         while(rs.next()){
+             int id2=rs.getInt("id");
+             int categoria=rs.getInt("categoria");
+             String descripcion=rs.getString("descripcion");
+             double precio=rs.getDouble("precio");
+             String imagen=rs.getString("imagen");
+             pro=new productos(id2, categoria, descripcion, precio, imagen);
+             
+         }
+         cerrarconeccion();
+        return pro;
+    }
+    
+    public List<Tallas> obtenertallas(int id) throws ClassNotFoundException, SQLException{
+        abriscon();
+         String sql="SELECT id,talla FROM tallas WHERE producto="+id+" and cantidad>0 GROUP BY talla";
+         pst=cn.prepareStatement(sql);
+         rs=pst.executeQuery();
+         List<Tallas> lista=new ArrayList<Tallas>();
+         
+         while(rs.next()){
+             
+             Tallas tallas=new Tallas(rs.getInt("id"), rs.getString("talla"));
+             lista.add(tallas);
+         }
+         cerrarconeccion();
+         return lista;
+    }
+    
 }
 
