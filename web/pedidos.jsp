@@ -1,17 +1,12 @@
 <%-- 
-    Document   : comprarproducto
-    Created on : 06-jun-2021, 13:45:23
-    Author     : juana
---%>
-
-<%@page import="modelo.Linea_pedido"%>
-<%@page import="modelo.Tallas"%>
-<%-- 
     Document   : index
     Created on : 24-mar-2021, 10:51:55
     Author     : juana
 --%>
 
+<%@page import="modelo.Tallas"%>
+<%@page import="modelo.Linea_pedido"%>
+<%@page import="modelo.Pedido"%>
 <%@page import="modelo.Categorias"%>
 <%@page import="java.util.List"%>
 <%@page import="modelo.productos"%>
@@ -29,21 +24,19 @@
             boolean log = false;
             HttpSession sesion = request.getSession();
             coneccion con = new coneccion();
-            if (request.getParameter("pro") == null) {
-                ServletContext contexto = getServletContext();
-                RequestDispatcher rd;
-                rd = contexto.getRequestDispatcher("/catalogo.jsp");
-                rd.forward(request, response);
-            }
-            String proid = request.getParameter("pro");
-            productos producto = con.obtenerproducto(proid);
-            List<Tallas> lista = con.obtenertallas(producto.getId());
+            List<productos> listapro = con.obtenerultimospedidos();
+            List<Categorias> categorias = con.obtenercategorias();
             if (sesion.getAttribute("user") != null) {
                 user = (Usuario) sesion.getAttribute("user");
                 log = true;
                 nom = user.getNombre();
+            } else {
+                ServletContext contexto = getServletContext();
+                RequestDispatcher rd;
+                rd = contexto.getRequestDispatcher("/index.jsp");
+                rd.forward(request, response);
             }
-            String disabled="disabled";
+             String disabled="disabled";
             String active="";
             if(log && sesion.getAttribute("carrito")!=null){
                 List<Linea_pedido> lp = (List<Linea_pedido>) sesion.getAttribute("carrito");
@@ -52,6 +45,7 @@
                     active="active";
                 }
             }
+            List<Pedido> pedidos = con.obtenerpedidoscliente(user.getId());
         %>
         <!---------------------codigo----------------------->
         <!-- Required meta tags -->
@@ -103,6 +97,7 @@
                         <li class="nav-item active">
                             <a class="nav-link" href="catalogo.jsp">catalogo <span class="sr-only">(current)</span></a>
                         </li>
+                       
                         <li class="nav-item <%=active%>">
                             <a class="nav-link <%=disabled%>" href="carrito.jsp">carrito</a>
                         </li>
@@ -192,7 +187,7 @@
         </div>
         <!-- navbar chikita -->
         <!-- menusito whey -->
-       <div id="mySidenav" class="sidenav">
+        <div id="mySidenav" class="sidenav">
             <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
             <a href="index.jsp">inicio</a>
             <a class="nav-link" href="catalogo.jsp">catalogo <span class="sr-only">(current)</span></a>
@@ -201,95 +196,82 @@
         <!-- menusito whey -->
 
         <!-- ------------------------contenido-------------------------- -->
-        <div class="container my-2 my-md-5 bg-white rounded sombras">
-            <div class="text-center">
-                <h1 class="font-weight-bold">
-                    COMPRAR
-                </h1>
-            </div>
-            <div class="container-fluid my-3">
-                <div class="row">
-                    <div class="col-md-5 my-3">
-                        <img src="<%=producto.getImagen()%>" class="img-fluid"><br>
-                    </div>
-                    <div class="col-md-7">
-                        <div class="text-center">
-                            <h2>
-                                <%=producto.getDescripcion()%>
-                            </h2>
-                        </div>
-                        <div class="my-5">
-                            <h3>
-                                precio:<%=producto.getPrecio()%>€
-                            </h3>
-                        </div>
-                            <form method="POST" action="comprarproducto">
+        <div class="accordion container my-5 " id="accordionExample">
 
-                            <select name="talla" class="form-control form-control-lg my-3">
-                                <%
-                                    boolean entra=false;
-                                    for (Tallas tallas : lista) {
-                                        entra=true;
-                                %>
-                                <option value="<%=tallas.getId()%>"><%=tallas.getTalla()%></option>
-                                <%
-                                    }
-                                %>
-                            </select>
-                            <input type="hidden" name="pro" value="<%=proid%>"/>
-                            <%
-                                if(entra){
-                                
-                            %>
-                            <input type="submit" class="btn btn-primary btn-lg active" value="añadir al carrito" role="button" aria-pressed="true"/>
-                            <%
-                                }else{
-                            %>
-                            <a  class="btn btn-primary btn-lg disabled" role="button" aria-pressed="true">seleccione una talla</a>
-                             <%
-                                }
-                            %>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- ventana modal -->
-        <div class="modal fade" id="exampleModal" tabindex="-1"  aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Iniciar sesion</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
+            <%
+                for (Pedido ped : pedidos) {
+            %>
+
+            <div class="card sombras">
+                <div class="card-header" id="heading<%=ped.getId()%>">
+                    <h2 class="mb-0">
+                        <button class="btn btn btn-block text-left" type="button" data-toggle="collapse" data-target="#collapse<%=ped.getId()%>" aria-expanded="false" aria-controls="collapse<%=ped.getId()%>">
+                            <div class="container-fluid">
+                                <div class="card text-center border-0">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><%=user.getNick()%></h5>
+                                        <p class="card-text">estado del pedido:<%=ped.getEstado()%></p>
+                                        <p class="card-text">precio total:<%=ped.getTotal()%></p>
+                                    </div>
+                                    <div class="text-muted">
+                                        fecha:<%=ped.getFecha()%>
+                                    </div>
+                                </div>
+                            </div>
                         </button>
-                    </div>
-                    <div class="modal-body">
-                        <form class="px-4 py-3" method="post" action="inicio" id="formulario1" name="formulario1" onsubmit="return prueba(1)">
-                            <input type="hidden" name="volver" value="comprarproducto.jsp?pro=<%=producto.getId()%>"/>
-                            <div class="form-group">
-                                <label for="email1">usuario/email  <span class="erroruse" style="color: red;"></span></label>
-                                <input type="text" class="form-control" name="log" id="email1" placeholder="email@ejemplo.com">
-                            </div>
-                            <div class="form-group">
-                                <label for="password1">contraseña</label>
-                                <input type="password" class="form-control" name="pass" id="password1" placeholder="contraseña">
-                            </div>
-                            <div class="form-group">
-                                <div class="form-check">
+                    </h2>
+                </div>
+
+                <div id="collapse<%=ped.getId()%>" class="collapse" aria-labelledby="heading<%=ped.getId()%>" data-parent="#accordionExample">
+                    <div class="card-body">
+
+                        <%
+                            for (Linea_pedido lp : ped.getLinea_pedidos()) {
+                                productos pro = lp.getProducto();
+                                Tallas talla = con.obtenertalla(lp.getTalla());
+                        %>
+                        <div class="card mb-3">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <img src="<%=pro.getImagen()%>" class="img-fluid" alt="...">
+                                </div>
+                                <div class="col-md-7">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-truncate"><%=pro.getDescripcion()%></h5>
+                                        <p class="card-text">precio:<%=pro.getPrecio()%></p>
+                                        <p class="card-text">talla:<%=talla.getTalla()%></p>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 text-center">
+                                    <div class="container my-5">
+                                        cantidad:x<%=lp.getCantidad()%>
+                                    </div>
 
                                 </div>
                             </div>
-                            <button type="submit" class="btn btn-primary">Entrar</button>
-                        </form>
+
+                        </div>
+
+                        <%
+                            }
+                        %>
+
+
+                        <a class="btn btn-danger" href="cancelarped?id=<%=ped.getId()%>" role="button">cancelar</a>
                     </div>
-                    <div class="modal-footer">
-                        <a class="dropdown-item" href="iniciarSession.jsp">crear una cuenta nueva</a>
-                        
-                    </div>
+
+
+
+
+
                 </div>
             </div>
+            <%
+                }
+            %>
+
         </div>
+
         <!-- ------------------------contenido-------------------------- -->
         <footer class="footer text-center text-light">
             <!-- Grid container -->

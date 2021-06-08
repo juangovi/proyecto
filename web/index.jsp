@@ -4,6 +4,7 @@
     Author     : juana
 --%>
 
+<%@page import="modelo.Linea_pedido"%>
 <%@page import="modelo.Categorias"%>
 <%@page import="java.util.List"%>
 <%@page import="modelo.productos"%>
@@ -27,6 +28,15 @@
                 user = (Usuario) sesion.getAttribute("user");
                 log = true;
                 nom = user.getNombre();
+            }
+            String disabled="disabled";
+            String active="";
+            if(log && sesion.getAttribute("carrito")!=null){
+                List<Linea_pedido> lista = (List<Linea_pedido>) sesion.getAttribute("carrito");
+                if(!lista.isEmpty()){
+                    disabled="";
+                    active="active";
+                }
             }
         %>
         <!---------------------codigo----------------------->
@@ -73,18 +83,16 @@
 
         <div class="d-none d-lg-block sticky-top aver">
             <nav class="navbar navbar-expand navbar-light barra ">
-                <a class="mr-3 letra" href="#">Juanito & Dolores</a>
+                <a class="mr-3 letra" href="inicio">Juanito & Dolores</a>
                 <div class="navbar-collapse">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item active">
                             <a class="nav-link" href="catalogo.jsp">catalogo <span class="sr-only">(current)</span></a>
                         </li>
-                        <li class="nav-item active">
-                            <a class="nav-link" href="#">tiendas</a>
-                        </li>
+                        
 
-                        <li class="nav-item">
-                            <a class="nav-link disabled" href="#">carrito</a>
+                        <li class="nav-item <%=active%>">
+                            <a class="nav-link <%=disabled%>" href="carrito.jsp">carrito</a>
                         </li>
                     </ul>
                     <div class="btn-group">
@@ -175,7 +183,8 @@
         <div id="mySidenav" class="sidenav">
             <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
             <a href="index.jsp">inicio</a>
-            <a href="catalogo.jsp">catalogo</a>
+            <a class="nav-link" href="catalogo.jsp">catalogo <span class="sr-only">(current)</span></a>
+            <a class="nav-link <%=disabled%>" href="carrito.jsp">carrito</a>
         </div>
         <!-- menusito whey -->
 
@@ -236,7 +245,7 @@
                     <%
                         if (log) {
                     %>
-                    <a href="/comprarproducto.jsp?pro=<%=pro.getId()%>" class="link"><div class="card-footer text-center">
+                    <a href="comprarproducto.jsp?pro=<%=pro.getId()%>" class="link"><div class="card-footer text-center">
                             <span class="comprar font-weight-bold">COMPRAR</span>
                         </div></a>
 
@@ -279,7 +288,9 @@
                         <img src="img/productos/<%=cat.getImg()%>" width="400" height="600" class="card-img-top" alt="...">
                         <div class="card-body">
                             <h3 class="card-title"><%=cat.getNombre()%></h3>
-                            <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                            <p class="card-text"> <a href="comprarproducto.jsp?pro=" class="link"><div class="card-footer text-center">
+                            <span class="comprar font-weight-bold">VER CATEGORIA</span>
+                        </div></a></p>
                         </div>
                     </div>
                 </div>
@@ -320,8 +331,8 @@
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <a class="dropdown-item" href="/iniciarSession.jsp">crear una cuenta nueva</a>
-                        <a class="dropdown-item" href="#">Forgot password?</a>
+                        <a class="dropdown-item" href="iniciarSession.jsp">crear una cuenta nueva</a>
+                        
                     </div>
                 </div>
             </div>

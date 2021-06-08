@@ -86,7 +86,7 @@ public class Linea_pedido {
     public void setCantidad(int cantidad) {
         this.cantidad = cantidad;
     }
-    private void setproducto(int id){
+    public void setproducto(int id){
         coneccion con=new coneccion();
         try {
             this.producto=con.obtenerproducto(""+id);

@@ -24,6 +24,14 @@
         <servlet-name>confirmacion</servlet-name>
         <servlet-class>controladores.confirmacion</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>eliminarcarrito</servlet-name>
+        <servlet-class>controladores.eliminarcarrito</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>cancelarped</servlet-name>
+        <servlet-class>controladores.cancelarped</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>inicio</servlet-name>
         <url-pattern>/inicio</url-pattern>
@@ -47,6 +55,14 @@
     <servlet-mapping>
         <servlet-name>confirmacion</servlet-name>
         <url-pattern>/confirmacion</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>eliminarcarrito</servlet-name>
+        <url-pattern>/eliminarcarrito</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>cancelarped</servlet-name>
+        <url-pattern>/cancelarped</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

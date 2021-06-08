@@ -21,21 +21,32 @@ public class Pedido {
     Date fecha;
     String estado;
     String codigopedido;
+    double total;
     List<Linea_pedido> linea_pedidos;
 
-    public Pedido(int usuario, List<Linea_pedido> lista) {
+    public double getTotal() {
+        return total;
+    }
+
+    public void setTotal(double total) {
+        this.total = total;
+    }
+
+    public Pedido(int usuario, List<Linea_pedido> lista,double total) {
         this.usuario = usuario;
         this.fecha= new Date(Calendar.getInstance().getTime().getTime());
         this.estado="activo";
         this.linea_pedidos=lista;
+        this.total=total;
     }
 
-    public Pedido(int id, int usuario, Date fecha, String estado, String codigopedido) {
+    public Pedido(int id, int usuario, Date fecha, String estado, String codigopedido,double total) {
         this.id = id;
         this.usuario = usuario;
         this.fecha = fecha;
         this.estado = estado;
         this.codigopedido = codigopedido;
+        this.total=total;
     }
 
     public Pedido(int usuario, Date fecha, String estado) {
@@ -93,7 +104,7 @@ public class Pedido {
     }
     public void generarcodigopedido(){
         Encriptar en=new Encriptar();
-        this.setCodigopedido(en.encriptacion(this.getFecha().toString()+this.usuario)+new Timestamp(System.currentTimeMillis()));
+        this.setCodigopedido(en.encriptacion(this.getFecha().toString()+this.usuario+new Timestamp(System.currentTimeMillis())));
         for (Linea_pedido linea_pedido : linea_pedidos) {
             linea_pedido.setCodigopedido(codigopedido);
         }

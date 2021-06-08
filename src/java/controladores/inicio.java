@@ -32,6 +32,10 @@ public class inicio extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             ServletContext contexto=getServletContext();
             RequestDispatcher rd;
+            try {
+                
+            
+            
             HttpSession sesion=request.getSession();
             if (sesion.getAttribute("user")!=null) {
                 rd=contexto.getRequestDispatcher("/index.jsp");
@@ -51,7 +55,10 @@ public class inicio extends HttpServlet {
             }
             rd=contexto.getRequestDispatcher("/"+pag);
             rd.forward(request, response);
-            
+            } catch (Exception e) {
+                rd=contexto.getRequestDispatcher("/index.jsp");
+                rd.forward(request, response);
+            }
         }
     } 
 

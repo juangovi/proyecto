@@ -50,7 +50,7 @@
                 </h1>
             </div>
             <div class="px-md-5">
-                <form method="post" action="/nuevousuario">
+                <form method="post" action="nuevousuario">
                     <div class="form-group">
                         <label for="usuario">usuario</label>
                         <input type="text" name="usuario" class="form-control" id="usuario" required > 

@@ -34,6 +34,15 @@
                 log = true;
                 nom = user.getNombre();
             }
+            String disabled="disabled";
+            String active="";
+            if(log && sesion.getAttribute("carrito")!=null){
+                List<Linea_pedido> lp = (List<Linea_pedido>) sesion.getAttribute("carrito");
+                if(!lp.isEmpty()){
+                    disabled="";
+                    active="active";
+                }
+            }
         %>
         <!---------------------codigo----------------------->
         <!-- Required meta tags -->
@@ -79,18 +88,15 @@
 
         <div class="d-none d-lg-block sticky-top aver">
             <nav class="navbar navbar-expand navbar-light barra ">
-                <a class="mr-3 letra" href="#">Juanito & Dolores</a>
+                <a class="mr-3 letra" href="inicio">Juanito & Dolores</a>
                 <div class="navbar-collapse">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item active">
                             <a class="nav-link" href="catalogo.jsp">catalogo <span class="sr-only">(current)</span></a>
                         </li>
-                        <li class="nav-item active">
-                            <a class="nav-link" href="#">tiendas</a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link disabled" href="#">carrito</a>
+                       
+                        <li class="nav-item <%=active%>">
+                            <a class="nav-link <%=disabled%>" href="carrito.jsp">carrito</a>
                         </li>
                     </ul>
                     <div class="btn-group">
@@ -181,7 +187,8 @@
         <div id="mySidenav" class="sidenav">
             <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
             <a href="index.jsp">inicio</a>
-            <a href="catalogo.jsp">catalogo</a>
+            <a class="nav-link" href="catalogo.jsp">catalogo <span class="sr-only">(current)</span></a>
+            <a class="nav-link <%=disabled%>" href="carrito.jsp">carrito</a>
         </div>
         <!-- menusito whey -->
 
@@ -192,7 +199,8 @@
 
                 for (Linea_pedido lp : lista) {
                     Tallas talla = con.obtenertalla(lp.getTalla());
-                    total += lp.getProducto().getPrecio();
+                    total += lp.getProducto().getPrecio()*lp.getCantidad();
+                    
             %>
             <div class="card mb-3">
                 <div class="row">
@@ -209,7 +217,7 @@
                     <div class="col-md-3 text-center">
                         <div class="container my-5">
                             cantidad:x<%=lp.getCantidad()%>
-                            <a href="#" class="btn" aria-label="Close">X</a>
+                            <a href="eliminarcarrito?del=<%=lp.getTalla()%>" class="btn" aria-label="Close">X</a>
                         </div>
 
                     </div>
@@ -217,6 +225,7 @@
             </div>
             <%
                 }
+                sesion.setAttribute("total",total);
             %>
             <div class="text-center">
                 <h3>total:<%=total%>€</h3>

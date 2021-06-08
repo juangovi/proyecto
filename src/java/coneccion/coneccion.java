@@ -7,6 +7,7 @@ package coneccion;
 
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -44,6 +45,7 @@ public class coneccion {
 
     private void abriscon() throws ClassNotFoundException, SQLException {
         Class.forName(drv);
+        //cn = DriverManager.getConnection(db, "super", "trebujena");
         cn = DriverManager.getConnection(db, "root", "");
         System.out.println("conectado");
     }
@@ -322,12 +324,13 @@ public class coneccion {
 
     public boolean hacerpedido(Pedido pedido) throws ClassNotFoundException, SQLException {
         abriscon();
-        String sql = "INSERT INTO pedidos(usuario, fecha, estado, codigopedido) VALUES (?,?,?,?)";
+        String sql = "INSERT INTO pedidos(usuario, fecha, estado, codigopedido, total) VALUES (?,?,?,?,?)";
         pst = cn.prepareStatement(sql);
         pst.setInt(1, pedido.getUsuario());
         pst.setDate(2, pedido.getFecha());
         pst.setString(3, pedido.getEstado());
         pst.setString(4, pedido.getCodigopedido());
+        pst.setDouble(5, pedido.getTotal());
         pst.executeUpdate();
         for (Linea_pedido lp : pedido.getLinea_pedidos()) {
             sql = "INSERT INTO `linea_pedidos`(codigopedido, producto, cantidad) VALUES (?,?,?)";
@@ -343,6 +346,76 @@ public class coneccion {
         
         cerrarconeccion();
         return true;
+    }
+    
+    public List<Pedido> obtenerpedidoscliente(int usu) throws ClassNotFoundException, SQLException {
+        abriscon();
+            String sql = "SELECT * FROM pedidos WHERE usuario ="+usu+" ORDER BY fecha DESC";
+            System.out.println(sql);
+            pst = cn.prepareStatement(sql);
+            rs = pst.executeQuery();
+            List<Pedido> lista=new ArrayList<Pedido>();
+            
+            while (rs.next()) {
+                int id=rs.getInt("id");
+                int usuario=rs.getInt("usuario");
+                Date fecha=rs.getDate("fecha");
+                String estado=rs.getString("estado");
+                String codigopedido=rs.getString("codigopedido");
+                double total=rs.getDouble("total");
+                Pedido pedido=new Pedido(id, usuario, fecha, estado, codigopedido,total);
+                lista.add(pedido);
+            }
+            for (Pedido lista1 : lista) {
+                sql = "SELECT * FROM linea_pedidos WHERE codigopedido='"+lista1.getCodigopedido()+"'";
+                System.out.println(sql);
+                pst = cn.prepareStatement(sql);
+                rs = pst.executeQuery();
+                List<Linea_pedido> listalp=new ArrayList<Linea_pedido>();
+                while (rs.next()) {
+                    int id=rs.getInt("id");
+                    String codigopedido=rs.getString("codigopedido");
+                    int talla=rs.getInt("producto");
+                    int cantidad=rs.getInt("cantidad");
+                    Linea_pedido lp=new Linea_pedido(id, codigopedido, talla, cantidad);
+                    listalp.add(lp);
+                }
+                lista1.setLinea_pedidos(listalp);
+        }
+            for (Pedido lista1 : lista) {
+                for (Linea_pedido listalp1 : lista1.getLinea_pedidos()) {
+               sql = "SELECT * FROM tallas WHERE id="+listalp1.getTalla();
+               System.out.println(sql);
+                pst = cn.prepareStatement(sql);
+                rs = pst.executeQuery();
+                rs.next();
+                listalp1.setproducto(rs.getInt("producto"));
+        }
+        }
+            
+            
+            
+        cerrarconeccion();
+        return lista;
+    }
+    public boolean cancelarped(int id) throws ClassNotFoundException, SQLException{
+         abriscon();
+        try {
+
+            String sql = "UPDATE pedidos SET estado='cancelado' WHERE id=?";
+            pst = cn.prepareStatement(sql);
+            pst.setInt(1, id);
+
+            pst.executeUpdate();
+
+        } catch (MySQLIntegrityConstraintViolationException e) {
+            cerrarconeccion();
+            return false;
+        }
+        cerrarconeccion();
+        return true;
+
+        
     }
 
 }

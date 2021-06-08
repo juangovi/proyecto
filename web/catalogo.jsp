@@ -4,6 +4,7 @@
     Author     : juana
 --%>
 
+<%@page import="modelo.Linea_pedido"%>
 <%@page import="modelo.Paginacion"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.Arrays"%>
@@ -34,8 +35,28 @@
                 log = true;
                 nom = user.getNombre();
             }
-            System.out.println(request.getQueryString());
+             String disabled="disabled";
+            String activate="";
+            if(log && sesion.getAttribute("carrito")!=null){
+                List<Linea_pedido> lista = (List<Linea_pedido>) sesion.getAttribute("carrito");
+                if(!lista.isEmpty()){
+                    disabled="";
+                    activate="active";
+                }
+                
+            }
             
+            String fil=request.getQueryString();
+            String prueba[]=fil.split("&");
+            if(request.getQueryString().contains("pag=")){
+                fil="";
+                for (int i=0; i<prueba.length-1; i++){
+                    if(i>0){
+                        fil+="&";
+                    }
+                    fil+=prueba[i];
+                }
+            }
             
         %>
         <!---------------------codigo----------------------->
@@ -82,18 +103,15 @@
 
         <div class="d-none d-lg-block sticky-top aver">
             <nav class="navbar navbar-expand navbar-light barra ">
-                <a class="mr-3 letra" href="#">Juanito & Dolores</a>
+                <a class="mr-3 letra" href="inicio">Juanito & Dolores</a>
                 <div class="navbar-collapse">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item active">
                             <a class="nav-link" href="catalogo.jsp">catalogo <span class="sr-only">(current)</span></a>
                         </li>
-                        <li class="nav-item active">
-                            <a class="nav-link" href="#">tiendas</a>
-                        </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link disabled" href="#">carrito</a>
+                         <li class="nav-item <%=activate%>">
+                            <a class="nav-link <%=disabled%>" href="carrito.jsp">carrito</a>
                         </li>
                     </ul>
                     <div class="btn-group">
@@ -181,10 +199,11 @@
         </div>
         <!-- navbar chikita -->
         <!-- menusito whey -->
-        <div id="mySidenav" class="sidenav">
+       <div id="mySidenav" class="sidenav">
             <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-             <a href="index.jsp">inicio</a>
-            <a href="catalogo.jsp">catalogo</a>
+            <a href="index.jsp">inicio</a>
+            <a class="nav-link" href="catalogo.jsp">catalogo <span class="sr-only">(current)</span></a>
+            <a class="nav-link <%=disabled%>" href="carrito.jsp">carrito</a>
         </div>
         <!-- menusito whey -->
 
@@ -245,7 +264,7 @@
                                     <%
                                         if (log) {
                                     %>
-                                    <a href="/comprarproducto.jsp?pro=<%=pro.getId()%>" class="link"><div class="card-footer text-center">
+                                    <a href="comprarproducto.jsp?pro=<%=pro.getId()%>" class="link"><div class="card-footer text-center">
                                             <span class="comprar font-weight-bold">COMPRAR</span>
                                         </div></a>
 
@@ -279,7 +298,7 @@
                             }
                         %>
                         <li class="page-item <%=first%>">
-                            <a class="page-link" href="catalogo.jsp?<%=request.getQueryString()%>&pag=<%=res.getPag() - 1%>">atras</a>
+                            <a class="page-link" href="catalogo.jsp?<%=fil%>&pag=<%=res.getPag() - 1%>">atras</a>
                         </li>
                         <%
                             for (int paginas = 1; paginas <= res.getNumpag(); paginas++) {
@@ -289,7 +308,7 @@
                                 }
 
                         %>
-                        <li class="page-item <%=active%>"><a class="page-link" href="catalogo.jsp?<%=request.getQueryString()%>&pag=<%=paginas%>"><%=paginas%></a></li>
+                        <li class="page-item <%=active%>"><a class="page-link" href="catalogo.jsp?<%=fil%>&pag=<%=paginas%>"><%=paginas%></a></li>
                             <%
                                 }
                                 String last = "";
@@ -300,7 +319,7 @@
                             %>
                             
                         <li class="page-item <%=last%>">
-                            <a class="page-link" href="catalogo.jsp?<%=request.getQueryString()%>&pag=<%=res.getPag() + 1%>">siguiente</a>
+                            <a class="page-link" href="catalogo.jsp?<%=fil%>&pag=<%=res.getPag() + 1%>">siguiente</a>
                         </li>
                     </ul>
                 </nav>
@@ -337,8 +356,8 @@
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <a class="dropdown-item" href="/iniciarSession.jsp">crear una cuenta nueva</a>
-                        <a class="dropdown-item" href="#">Forgot password?</a>
+                        <a class="dropdown-item" href="iniciarSession.jsp">crear una cuenta nueva</a>
+                        
                     </div>
                 </div>
             </div>
