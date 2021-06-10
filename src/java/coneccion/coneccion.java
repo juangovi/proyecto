@@ -417,5 +417,145 @@ public class coneccion {
 
         
     }
+    public boolean modificacion(String sql) throws ClassNotFoundException, SQLException{
+        abriscon();
+        try {
 
+            pst = cn.prepareStatement(sql);
+            pst.executeUpdate();
+
+        } catch (MySQLIntegrityConstraintViolationException e) {
+            cerrarconeccion();
+            return false;
+        }
+        cerrarconeccion();
+       return true;   
+    }
+    
+   public List<Pedido> obtenerpedidos(HttpServletRequest request) throws ClassNotFoundException, SQLException {
+        abriscon();
+            String filtro="";
+            if(request.getParameter("buqueda")!=null){
+            
+            String fil="";
+            List<String> filtros = new ArrayList<String>();
+            if(request.getParameter("fecha1")!=null && !request.getParameter("fecha1").equals("")){
+                filtros.add(request.getParameter("fecha1"));
+            }
+            if(request.getParameter("fecha2")!=null && !request.getParameter("fecha2").equals("")){
+                filtros.add(request.getParameter("fecha2"));
+            }
+                System.out.println(filtros.size());
+            if (filtros.size()>2) {
+                fil+="fecha BETWEEN '"+request.getParameter("fecha1")+"' AND '"+request.getParameter("fecha12")+",";
+            }else if(!filtros.isEmpty()){
+                fil+="fecha ='"+filtros.get(0)+"'";
+            }
+                if (request.getParameter("usuario")!=null && !request.getParameter("usuario").equals("")) {
+                    if (!filtros.isEmpty()) {
+                        fil+=" AND ";
+                    }
+                    fil+="usuario=(SELECT id FROM usuarios WHERE nick LIKE '%"+request.getParameter("usuario")+"%')";
+                }
+                if (!fil.equals("")) {
+                   filtro=" WHERE "+fil; 
+                }
+            }
+            String sql = "SELECT * FROM pedidos"+filtro+" ORDER BY fecha DESC";
+            System.out.println(sql);
+            pst = cn.prepareStatement(sql);
+            rs = pst.executeQuery();
+            List<Pedido> lista=new ArrayList<Pedido>();
+            
+            while (rs.next()) {
+                int id=rs.getInt("id");
+                int usuario=rs.getInt("usuario");
+                Date fecha=rs.getDate("fecha");
+                String estado=rs.getString("estado");
+                String codigopedido=rs.getString("codigopedido");
+                double total=rs.getDouble("total");
+                Pedido pedido=new Pedido(id, usuario, fecha, estado, codigopedido,total);
+                lista.add(pedido);
+            }
+            for (Pedido lista1 : lista) {
+                sql = "SELECT * FROM linea_pedidos WHERE codigopedido='"+lista1.getCodigopedido()+"'";
+                System.out.println(sql);
+                pst = cn.prepareStatement(sql);
+                rs = pst.executeQuery();
+                List<Linea_pedido> listalp=new ArrayList<Linea_pedido>();
+                while (rs.next()) {
+                    int id=rs.getInt("id");
+                    String codigopedido=rs.getString("codigopedido");
+                    int talla=rs.getInt("producto");
+                    int cantidad=rs.getInt("cantidad");
+                    Linea_pedido lp=new Linea_pedido(id, codigopedido, talla, cantidad);
+                    listalp.add(lp);
+                }
+                lista1.setLinea_pedidos(listalp);
+        }
+            for (Pedido lista1 : lista) {
+                for (Linea_pedido listalp1 : lista1.getLinea_pedidos()) {
+               sql = "SELECT * FROM tallas WHERE id="+listalp1.getTalla();
+               System.out.println(sql);
+                pst = cn.prepareStatement(sql);
+                rs = pst.executeQuery();
+                rs.next();
+                listalp1.setproducto(rs.getInt("producto"));
+        }
+        }
+            
+            
+            
+        cerrarconeccion();
+        return lista;
+    }
+   public List<Usuario> gettodosusurarios(HttpServletRequest request) throws ClassNotFoundException, SQLException{
+       abriscon();
+       String filtro="";
+       if(request.getParameter("buqueda")!=null){
+           
+            if(request.getParameter("usuario")!=null && !request.getParameter("usuario").equals("")){
+                filtro=" WHERE nick LIKE '%"+request.getParameter("usuario")+"%'";
+            }
+       }
+       List<Usuario> lista=new ArrayList<Usuario>();
+       String sql = "SELECT * FROM usuarios"+filtro;
+       System.out.println(sql);
+       pst = cn.prepareStatement(sql);
+       rs = pst.executeQuery();
+       while(rs.next()){
+           int id = rs.getInt("id");
+            String nombre = rs.getString("nombre");
+            String apellidos = rs.getString("apellidos");
+            String nick = rs.getString("nick");
+            String email = rs.getString("email");
+            String password = rs.getString("password");
+            int rol = rs.getInt("rol");
+            String direccion = rs.getString("direccion");
+            String geoloc = rs.getString("geoloc");
+            int estado = rs.getInt("estado");
+            String imagen = rs.getString("imagen");
+            String token = rs.getString("token");
+            Usuario usuario = new Usuario(id, nombre, apellidos, nick, email, password, rol, direccion, geoloc, estado, imagen, token);
+            lista.add(usuario);
+       }
+       
+       cerrarconeccion();
+       return lista;
+   }
+    public boolean cambiarestado(String id, String st) throws ClassNotFoundException, SQLException{
+        abriscon();
+        try {
+            String sql="UPDATE usuarios SET estado="+st+" WHERE id = "+id;
+            pst = cn.prepareStatement(sql);
+            pst.executeUpdate();
+
+        } catch (MySQLIntegrityConstraintViolationException e) {
+            cerrarconeccion();
+            return false;
+        }
+        cerrarconeccion();
+       return true;   
+    }
+           
 }

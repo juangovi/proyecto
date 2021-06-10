@@ -5,9 +5,6 @@
 --%>
 
 <%@page import="modelo.Linea_pedido"%>
-<%@page import="modelo.Paginacion"%>
-<%@page import="java.util.ArrayList"%>
-<%@page import="java.util.Arrays"%>
 <%@page import="modelo.Categorias"%>
 <%@page import="java.util.List"%>
 <%@page import="modelo.productos"%>
@@ -20,47 +17,31 @@
     <head>
         <!---------------------codigo----------------------->
         <%
-
             String nom = "iniciar sesion";
             Usuario user = null;
             boolean log = false;
             HttpSession sesion = request.getSession();
-
             coneccion con = new coneccion();
-            List<Categorias> categorias = con.obtenercategorias();
-            Paginacion res = con.todoslosproductospaginados(request, categorias);
-
+            ServletContext contexto=getServletContext();
+            RequestDispatcher rd;
             if (sesion.getAttribute("user") != null) {
                 user = (Usuario) sesion.getAttribute("user");
                 log = true;
                 nom = user.getNombre();
+            }else{
+                rd=contexto.getRequestDispatcher("/index.jsp");
+                rd.forward(request, response);
             }
-            String disabled = "disabled";
-            String activate = "";
-            if (log && sesion.getAttribute("carrito") != null) {
+            
+            String disabled="disabled";
+            String active="";
+            if(log && sesion.getAttribute("carrito")!=null){
                 List<Linea_pedido> lista = (List<Linea_pedido>) sesion.getAttribute("carrito");
-                if (!lista.isEmpty()) {
-                    disabled = "";
-                    activate = "active";
-                }
-
-            }
-            String fil="";
-            if (request.getQueryString() != null && !request.getQueryString().equals("")) {
-
-                fil = request.getQueryString();
-                String prueba[] = fil.split("&");
-                if (request.getQueryString().contains("pag=")) {
-                    fil = "";
-                    for (int i = 0; i < prueba.length - 1; i++) {
-                        if (i > 0) {
-                            fil += "&";
-                        }
-                        fil += prueba[i];
-                    }
+                if(!lista.isEmpty()){
+                    disabled="";
+                    active="active";
                 }
             }
-
         %>
         <!---------------------codigo----------------------->
         <!-- Required meta tags -->
@@ -112,8 +93,9 @@
                         <li class="nav-item active">
                             <a class="nav-link" href="catalogo.jsp">catalogo <span class="sr-only">(current)</span></a>
                         </li>
+                        
 
-                        <li class="nav-item <%=activate%>">
+                        <li class="nav-item <%=active%>">
                             <a class="nav-link <%=disabled%>" href="carrito.jsp">carrito</a>
                         </li>
                     </ul>
@@ -211,162 +193,40 @@
         <!-- menusito whey -->
 
         <!-- ------------------------contenido-------------------------- -->
-        <div class="container-fluid">
-
-
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="container my-5">
-                        <div class="tarjeta sombras rounded">
-                            <div class="card-body">
-                                <h3 class="card-title text-center">filtrar contenido</h3>
-                                <div class="card-text">
-                                    <form action="" method="get">
-                                        <h5 class="card-title text-center">buscar</h5>
-                                        <input type="text" name="busqueda" class="form-control" id="text">
-
-                                        <h5 class="card-title text-center">Ropa</h5>
-                                        <%
-                                            for (Categorias cat : categorias) {
-                                                String select = "";
-                                                if (request.getParameter("categoria" + cat.getId()) != null) {
-                                                    select = "checked";
-                                                }
-                                        %>
-                                        <div class="form-check">
-                                            <input class="form-check-input" <%=select%> type="checkbox" name="categoria<%=cat.getId()%>" value="<%=cat.getId()%>" id="<%=cat.getNombre()%>">
-                                            <label class="form-check-label" for="<%=cat.getNombre()%>">
-                                                <%=cat.getNombre()%>
-                                            </label>
-                                        </div>
-                                        <%
-                                            }
-                                        %>
-                                        <input type="submit" name="boton" class="btn btn-light" value="buscar"/>
-                                    </form>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="col-md-9">
-                    <div class="container-fluid tarjeta my-5 sombras py-4 rounded">
-                        <div class="row row-cols-1 row-cols-md-3">
-                            <%
-                                for (productos pro : res.getListapro()) {
-                            %>
-                            <div class="col mb-4">
-                                <div class="card h-100">
-                                    <img src="<%=pro.getImagen()%>" width="400" height="600" class="card-img-top" alt="">
-                                    <div class="card-body">
-                                        <h5 class="card-title"><%=pro.getDescripcion()%></h5>
-                                        <p class="card-text">precio:<%=pro.getPrecio()%>€</p>
-                                    </div>
-                                    <%
-                                        if (log) {
-                                    %>
-                                    <a href="comprarproducto.jsp?pro=<%=pro.getId()%>" class="link"><div class="card-footer text-center">
-                                            <span class="comprar font-weight-bold">COMPRAR</span>
-                                        </div></a>
-
-                                    <%
-                                    } else {
-                                    %>
-                                    <div class="card-footer text-center">
-                                        <span class="comprar font-weight-bold">iniciar sesion</span>
-                                    </div>
-                                    <%
-                                        }
-                                    %>
-                                </div>
-                            </div>
-                            <%
-                                }
-                            %>
-
-
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="container bg-light rounded mt-5 p-3 sombras login">
             <div>
-                <nav aria-label="..." style="margin: auto;"> 
-                    <ul class="pagination justify-content-center sombreado">
-                        <%
-                            String first = "";
-                            if (res.getPag() <= 1) {
-                                first = "disabled";
-                            }
-                        %>
-                        <li class="page-item <%=first%>">
-                            <a class="page-link" href="catalogo.jsp?<%=fil%>&pag=<%=res.getPag() - 1%>">atras</a>
-                        </li>
-                        <%
-                            for (int paginas = 1; paginas <= res.getNumpag(); paginas++) {
-                                String active = "";
-                                if (paginas == res.getPag()) {
-                                    active = "active";
-                                }
-
-                        %>
-                        <li class="page-item <%=active%>"><a class="page-link" href="catalogo.jsp?<%=fil%>&pag=<%=paginas%>"><%=paginas%></a></li>
-                            <%
-                                }
-                                String last = "";
-                                if (res.getNumpag() <= res.getPag()) {
-
-                                    last = "disabled";
-                                }
-                            %>
-
-                        <li class="page-item <%=last%>">
-                            <a class="page-link" href="catalogo.jsp?<%=fil%>&pag=<%=res.getPag() + 1%>">siguiente</a>
-                        </li>
-                    </ul>
-                </nav>
+                <h1 class="text-center p-3">
+                    REGISTRO
+                </h1>
             </div>
-
-        </div>
-        <!-- ventana modal -->
-        <div class="modal fade" id="exampleModal" tabindex="-1"  aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Iniciar sesion</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+            <div class="px-md-5">
+                <form method="post" action="modificarusuario">
+                    
+                    <div class="form-group">
+                        <label for="nombre">nombre</label>
+                        <input type="text" name="nombre" value="<%=user.getNombre()%>" class="form-control" id="nombre" >
                     </div>
-                    <div class="modal-body">
-                        <form class="px-4 py-3" method="post" action="inicio" id="formulario1" name="formulario1" onsubmit="return prueba(1)">
-                            <input type="hidden" name="volver" value="catalogo.jsp"/>
-                            <div class="form-group">
-                                <label for="email1">usuario/email  <span class="erroruse" style="color: red;"></span></label>
-                                <input type="text" class="form-control" name="log" id="email1" placeholder="email@ejemplo.com">
-                            </div>
-                            <div class="form-group">
-                                <label for="password1">contraseña</label>
-                                <input type="password" class="form-control" name="pass" id="password1" placeholder="contraseña">
-                            </div>
-                            <div class="form-group">
-                                <div class="form-check">
-
-                                </div>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Entrar</button>
-                        </form>
+                    <div class="form-group">
+                        <label for="apellido">apellido</label>
+                        <input type="text" name="apellido" value="<%=user.getApellidos()%>" class="form-control" id="apellido" >
                     </div>
-                    <div class="modal-footer">
-                        <a class="dropdown-item" href="iniciarSession.jsp">crear una cuenta nueva</a>
-
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">direccion</label>
+                        <input type="direccion" name="direccion" value="<%=user.getDireccion()%>" class="form-control" id="direccion" >
                     </div>
-                </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">nueva contraseña</label>
+                        <input type="password" name="password" class="form-control" id="exampleInputPassword1">
+                    </div>
+                        
+                    
+                    <button type="submit" class="btn btn-primary">modificar</button>
+                </form>
             </div>
         </div>
+      
         <!-- ------------------------contenido-------------------------- -->
-        <footer class="footer text-center text-light">
+         <footer class="footer text-center text-light">
             <!-- Grid container -->
             <div class="container p-4 pb-0">
                 <!-- Section: Social media -->

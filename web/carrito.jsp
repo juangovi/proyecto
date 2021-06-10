@@ -118,7 +118,7 @@
                             <%=nom%>
                         </button>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-                            <a class="dropdown-item" href="#">mi perfil</a>
+                            <a class="dropdown-item" href="modificarperfil.jsp">mi perfil</a>
                             <a class="dropdown-item" href="cerrarSesion">cerrar sesion</a>
 
                         </div>
@@ -162,8 +162,8 @@
                                     <i class="fas fa-user" style="font-size: 200%;"></i>
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-                                    <a class="dropdown-item" href="#">mi perfil</a>
-                                    <a class="dropdown-item" href="#">cerrar sesion</a>
+                                    <a class="dropdown-item" href="modificarperfil.jsp">mi perfil</a>
+                                    <a class="dropdown-item" href="cerrarSesion">cerrar sesion</a>
 
                                 </div>
                                 <%

@@ -32,6 +32,14 @@
         <servlet-name>cancelarped</servlet-name>
         <servlet-class>controladores.cancelarped</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>modificarusuario</servlet-name>
+        <servlet-class>controladores.modificarusuario</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>bloquear</servlet-name>
+        <servlet-class>controladores.bloquear</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>inicio</servlet-name>
         <url-pattern>/inicio</url-pattern>
@@ -63,6 +71,14 @@
     <servlet-mapping>
         <servlet-name>cancelarped</servlet-name>
         <url-pattern>/cancelarped</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>modificarusuario</servlet-name>
+        <url-pattern>/modificarusuario</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>bloquear</servlet-name>
+        <url-pattern>/bloquear</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

@@ -22,22 +22,26 @@
             boolean log = false;
             HttpSession sesion = request.getSession();
             coneccion con = new coneccion();
-            List<productos> listapro = con.obtenerultimospedidos();
-            List<Categorias> categorias = con.obtenercategorias();
             if (sesion.getAttribute("user") != null) {
                 user = (Usuario) sesion.getAttribute("user");
                 log = true;
                 nom = user.getNombre();
+            }else {
+                ServletContext contexto = getServletContext();
+                RequestDispatcher rd;
+                rd = contexto.getRequestDispatcher("/index.jsp");
+                rd.forward(request, response);
             }
-            String disabled="disabled";
-            String active="";
-            if(log && sesion.getAttribute("carrito")!=null){
+            String disabled = "disabled";
+            String active = "";
+            if (log && sesion.getAttribute("carrito") != null) {
                 List<Linea_pedido> lista = (List<Linea_pedido>) sesion.getAttribute("carrito");
-                if(!lista.isEmpty()){
-                    disabled="";
-                    active="active";
+                if (!lista.isEmpty()) {
+                    disabled = "";
+                    active = "active";
                 }
             }
+            List<Usuario> lista=con.gettodosusurarios(request);
         %>
         <!---------------------codigo----------------------->
         <!-- Required meta tags -->
@@ -89,7 +93,7 @@
                         <li class="nav-item active">
                             <a class="nav-link" href="catalogo.jsp">catalogo <span class="sr-only">(current)</span></a>
                         </li>
-                        
+
 
                         <li class="nav-item <%=active%>">
                             <a class="nav-link <%=disabled%>" href="carrito.jsp">carrito</a>
@@ -189,189 +193,67 @@
         <!-- menusito whey -->
 
         <!-- ------------------------contenido-------------------------- -->
-
-        <!-- ------------------------------------slicer---------------------------- -->
-        <div class="container my-3 my-lg-5">
-            <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel">
-
-                <div class="carousel-inner border border-white zpos sombras">
-                    <div class="carousel-item active">
-                        <img src="img/slicer/WhatsApp Image 2021-03-09 at 10.23.48.jpeg" class="d-block w-100" alt="...">
-                        <div class="carousel-caption ">
-                            <h5>ULTIMO EN MODA</h5>
-                            <p>compra tu ropa siempre a la moda</p>
-                        </div>
+        <div class="container my-5 pt-3 bg-light rounded sombras">
+            <form action="administrarusuarios.jsp" method="POST">
+                    <div class="form-group">
+                        <input type="text" name="usuario" class="form-control" id="exampleFormControlInput1" placeholder="usuario">
                     </div>
-                    <div class="carousel-item">
-                        <img src="img/slicer/WhatsApp Image 2021-03-11 at 11.59.54.jpeg" class="d-block w-100" alt="...">
-                        <div class="carousel-caption ">
-                            <h5>todo tipo de pantalones vaqueros</h5>
-                            <p>los mejoras de toda andalicía</p>
-                        </div>
-                    </div>
-                    <div class="carousel-item">
-                        <img src="img/slicer/WhatsApp Image 2021-03-10 at 13.09.19.jpeg" class="d-block w-100" alt="...">
-                        <div class="carousel-caption ">
-                            <h5>reserva tus pedidos</h5>
-                            <p>rapido nos lo quitan de las manos</p>
-                        </div>
-                    </div>
-                </div>
-                <a class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="sr-only">Previous</span>
-                </a>
-                <a class="carousel-control-next" href="#carouselExampleCaptions" role="button" data-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="sr-only">Next</span>
-                </a>
-            </div>
-        </div>
-        <!-- ------------------------------------slicer---------------------------- -->
-        <!-- ----------------------------ultimos------------------------------ -->
-        <h1 class="text-center font-weight-bold">nuevos productos</h1>
-
-        <div class="container mb-5">
-            <div class="card-deck">  
-                <%
-                    for (productos pro : listapro) {
-                %>
-                <div class="card sombras">
-                    <img src="<%=pro.getImagen()%>"  width="400" height="300"  class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <h5 class="card-title truncar"><%=pro.getDescripcion()%></h5>
-                        <p class="card-text">Talla:<br>precio:<%=pro.getPrecio()%>€</p>
-                    </div>
+                    <input type="hidden" value="1" name="buqueda">
+                    <input type="submit" class="btn btn-success mb-3" name="busfe" value="BUSCAR">
+                </form>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">nick</th>
+                        <th scope="col">email</th>
+                        <th scope="col">rol</th>
+                        <th scope="col">estado</th>
+                        <th scope="col">opciones</th>
+                    </tr>
+                </thead>
+                <tbody>
                     <%
-                        if (log) {
-                    %>
-                    <a href="comprarproducto.jsp?pro=<%=pro.getId()%>" class="link"><div class="card-footer text-center">
-                            <span class="comprar font-weight-bold">COMPRAR</span>
-                        </div></a>
-
-                    <%
-                    } else {
-                    %>
-                    <div class="card-footer text-center">
-                        <span class="comprar font-weight-bold">iniciar sesion</span>
-                    </div>
-                    <%
-                        }
-                    %>
-                </div>
-                <%
-                    }
-                %>
-            </div>
-        </div>
-        <!-- ----------------------------ultimos------------------------------ -->
-        <!-- -----------------------------------------------jumbotron--------------------------------------------- -->
-        <div class="jumbo p-5">
-            <h1 class="display-4">nuestras tienda</h1>
-            <p class="lead">consulta la ubicación de las tiendas a lo largo de la semana y los horarios disponible de todo el mes</p>
-            <hr class="my-4">
-            <p>comparte tu ubicación para ver las tiendas mas cercanas para recoger sus pedidos o ver nuestros productos de cerca </p>
-            <a class="btn btn-primary btn-lg" href="#" role="button">ver tiendas</a>
-        </div>
-        <!-- -----------------------------------------------jumbotron--------------------------------------------- -->
-        <!-- categorias -->
-        <h1 class="text-center font-weight-bold my-5">categorias</h1>
-        <div class="container">
-            <div class="row row-cols-1 row-cols-md-2">
-
-                <%
-                    for (Categorias cat : categorias) {
-                %>
-
-                <div class="col mb-4">
-                    <div class="card sombras">
-                        <img src="img/productos/<%=cat.getImg()%>" width="400" height="600" class="card-img-top" alt="...">
-                        <div class="card-body">
-                            <h3 class="card-title"><%=cat.getNombre()%></h3>
-                            <p class="card-text"> <a href="catalogo.jsp?categoria<%=cat.getId()%>=categoria<%=cat.getId()%>" class="link"><div class="card-footer text-center">
-                            <span class="comprar font-weight-bold">VER CATEGORIA</span>
-                        </div></a></p>
-                        </div>
-                    </div>
-                </div>
-                <%
-                    }
-                %>
-
-            </div>
-        </div>
-        <!-- categorias -->
-        <!-- ventana modal -->
-        <div class="modal fade" id="exampleModal" tabindex="-1"  aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Iniciar sesion</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form class="px-4 py-3" method="post" action="inicio" id="formulario1" name="formulario1" onsubmit="return prueba(1)">
-                            <input type="hidden" name="volver" value="index.jsp"/>
-                            <div class="form-group">
-                                <label for="email1">usuario/email  <span class="erroruse" style="color: red;"></span></label>
-                                <input type="text" class="form-control" name="log" id="email1" placeholder="email@ejemplo.com">
-                            </div>
-                            <div class="form-group">
-                                <label for="password1">contraseña</label>
-                                <input type="password" class="form-control" name="pass" id="password1" placeholder="contraseña">
-                            </div>
-                            <div class="form-group">
-                                <div class="form-check">
-
-                                </div>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Entrar</button>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <a class="dropdown-item" href="iniciarSession.jsp">crear una cuenta nueva</a>
+                        for (Usuario lista1 : lista) {
+                            String rol="";
+                            String estado="";
+                            if(lista1.getRol()==0){
+                                rol="user";
+                            }else if(lista1.getRol()==1){
+                                rol="empleado";
+                            }else if(lista1.getRol()==2){
+                                rol="admin";
+                            }
+                            int st=0;
+                            String boton="desbloquear";
+                            if(lista1.getEstado()==0){
+                                estado="activo";
+                                boton="bloquear";
+                                st=1;
+                            }else{
+                                estado="bloqueado";
+                            }
+                                
                         
-                    </div>
-                </div>
-            </div>
+                    %>
+                    <tr>
+                        <th scope="row"><%=lista1.getNick()%></th>
+                        <td><%=lista1.getEmail()%></td>
+                        <td><%=rol%></td>
+                        <td><%=estado%></td>
+                        <td><a href="bloquear?id=<%=lista1.getId()%>&st=<%=st%>"><%=boton%></a>/<a href="editar.jsp?id=<%=lista1.getId()%>">editar</a></td>
+                    </tr>
+                     <%
+                        
+                            }
+                                
+                        
+                    %>
+                </tbody>
+            </table>
         </div>
+
         <!-- ------------------------contenido-------------------------- -->
-        <footer class="footer text-center text-light">
-            <!-- Grid container -->
-            <div class="container p-4 pb-0">
-                <!-- Section: Social media -->
-                <section class="mb-4">
-                    <!-- Facebook -->
-                    <a class="btn btn-outline-light btn-floating m-1" href="https://www.facebook.com/vaquerosjuanito.jd" role="button"
-                       ><i class="fab fa-facebook-f"></i>
-                    </a>
-                    <!-- Instagram -->
-                    <a class="btn btn-outline-light btn-floating m-1" href="https://www.instagram.com/jagovi59/" role="button"
-                       ><i class="fab fa-instagram"></i>
-                    </a>
-                    <!-- mail -->
-                    <a class="btn btn-outline-light btn-floating m-1" href="mailto:juanantoniogovidal@gmail.com" role="button"
-                       ><i class="fas fa-at"></i>
-                    </a>
-                    <!-- yo -->
-                    <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"
-                       ><i class="fas fa-user-tie"></i>
-                    </a>
-
-                </section>
-                <!-- Section: Social media -->
-            </div>
-            <!-- Grid container -->
-
-            <!-- Copyright -->
-            <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
-                © 2021 Copyright:Juan Antonio Gonzalez vidal
-
-            </div>
-            <!-- Copyright -->
-        </footer>
+        
 
         <!-- Optional JavaScript; choose one of the two! -->
 

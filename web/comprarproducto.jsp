@@ -126,7 +126,7 @@
                             <%=nom%>
                         </button>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-                            <a class="dropdown-item" href="#">mi perfil</a>
+                            <a class="dropdown-item" href="modificarperfil.jsp">mi perfil</a>
                             <a class="dropdown-item" href="cerrarSesion">cerrar sesion</a>
 
                         </div>
@@ -170,8 +170,8 @@
                                     <i class="fas fa-user" style="font-size: 200%;"></i>
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-                                    <a class="dropdown-item" href="#">mi perfil</a>
-                                    <a class="dropdown-item" href="#">cerrar sesion</a>
+                                    <a class="dropdown-item" href="modificarperfil.jsp">mi perfil</a>
+                                    <a class="dropdown-item" href="cerrarSesion">cerrar sesion</a>
 
                                 </div>
                                 <%
@@ -291,21 +291,21 @@
             </div>
         </div>
         <!-- ------------------------contenido-------------------------- -->
-        <footer class="footer text-center text-light">
+         <footer class="footer text-center text-light">
             <!-- Grid container -->
             <div class="container p-4 pb-0">
                 <!-- Section: Social media -->
                 <section class="mb-4">
                     <!-- Facebook -->
-                    <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"
+                    <a class="btn btn-outline-light btn-floating m-1" href="https://www.facebook.com/vaquerosjuanito.jd" role="button"
                        ><i class="fab fa-facebook-f"></i>
                     </a>
                     <!-- Instagram -->
-                    <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"
+                    <a class="btn btn-outline-light btn-floating m-1" href="https://www.instagram.com/jagovi59/" role="button"
                        ><i class="fab fa-instagram"></i>
                     </a>
                     <!-- mail -->
-                    <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"
+                    <a class="btn btn-outline-light btn-floating m-1" href="mailto:juanantoniogovidal@gmail.com" role="button"
                        ><i class="fas fa-at"></i>
                     </a>
                     <!-- yo -->
