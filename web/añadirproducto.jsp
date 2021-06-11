@@ -22,34 +22,33 @@
             boolean log = false;
             HttpSession sesion = request.getSession();
             coneccion con = new coneccion();
-            ServletContext contexto=getServletContext();
+            ServletContext contexto = getServletContext();
             RequestDispatcher rd;
             if (sesion.getAttribute("user") != null) {
                 user = (Usuario) sesion.getAttribute("user");
                 log = true;
                 nom = user.getNombre();
-            }else{
-                rd=contexto.getRequestDispatcher("/index.jsp");
+            } else {
+                rd = contexto.getRequestDispatcher("/index.jsp");
                 rd.forward(request, response);
             }
-            
-            String disabled="disabled";
-            String active="";
-            if(log && sesion.getAttribute("carrito")!=null){
+
+            String disabled = "disabled";
+            String active = "";
+            if (log && sesion.getAttribute("carrito") != null) {
                 List<Linea_pedido> lista = (List<Linea_pedido>) sesion.getAttribute("carrito");
-                if(!lista.isEmpty()){
-                    disabled="";
-                    active="active";
+                if (!lista.isEmpty()) {
+                    disabled = "";
+                    active = "active";
                 }
             }
-            String id=request.getParameter("id");
-            Usuario usereditar=con.getallUser(id);
+            List<Categorias> categorias = con.obtenercategorias();
         %>
         <!---------------------codigo----------------------->
         <!-- Required meta tags -->
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="css/estilos.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
@@ -95,7 +94,7 @@
                         <li class="nav-item active">
                             <a class="nav-link" href="catalogo.jsp">catalogo <span class="sr-only">(current)</span></a>
                         </li>
-                        
+
 
                         <li class="nav-item <%=active%>">
                             <a class="nav-link <%=disabled%>" href="carrito.jsp">carrito</a>
@@ -198,37 +197,76 @@
         <div class="container bg-light rounded mt-5 p-3 sombras login">
             <div>
                 <h1 class="text-center p-3">
-                    EDITAR
+                    AÑADIR PRODUCTO
                 </h1>
             </div>
             <div class="px-md-5">
-                <form method="post" action="administrarmodificarusuario">
-                    
+                <form method="post" action="nuevoproducto" enctype="multipart/form-data">
+
                     <div class="form-group">
-                        <label for="nombre">nombre</label>
-                        <input type="text" name="nombre" value="<%=usereditar.getNombre()%>" class="form-control" id="nombre" >
+                        <label for="descripcion">descripcion</label>
+                        <input type="text" name="descripcion" required="" class="form-control" id="descripcion" >
                     </div>
                     <div class="form-group">
-                        <label for="apellido">apellido</label>
-                        <input type="text" name="apellido" value="<%=usereditar.getApellidos()%>" class="form-control" id="apellido" >
+                        <label for="categoria">categoria</label>
+                        <select name="categoria" required id="categoria">
+                            <%
+                                for (Categorias cat : categorias) {
+                            %>
+                            <option value="<%=cat.getId()%>"><%=cat.getNombre()%></option>
+                            <%
+                                }
+                            %>
+                        </select>
                     </div>
                     <div class="form-group">
-                        <label for="exampleInputPassword1">direccion</label>
-                        <input type="direccion" name="direccion" value="<%=usereditar.getDireccion()%>" class="form-control" id="direccion" >
+                        <label for="precio">precio</label>
+                        <input type="number" step="any" name="precio" required class="form-control" id="precio" >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="foto">imagen del producto</label>
+                        <input type="file" name="foto" required accept="image/png, image/jpeg" class="form-control-file" id="foto">
+                    </div>
+                    <h1 class="text-center p-3">
+                        tallas
+                    </h1>
+                    <div class="form-group">
+                        <label for="talla">XXS</label>
+                        <input type="number"  name="talla" value="0" required class="form-control" id="talla" >
                     </div>
                     <div class="form-group">
-                        <label for="exampleInputPassword1">nueva contraseña</label>
-                        <input type="password" name="password" class="form-control" id="exampleInputPassword1">
+                        <label for="talla1">XS</label>
+                        <input type="number" value="0" name="talla1" required class="form-control" id="talla1" >
                     </div>
-                        
-                        <input type="hidden" name="id" value="<%=id%>"/>
+                    <div class="form-group">
+                        <label for="talla2">S</label>
+                        <input type="number" value="0" name="talla2" required class="form-control" id="talla2" >
+                    </div>
+                    <div class="form-group">
+                        <label for="talla3">M</label>
+                        <input type="number" value="0" name="talla3" required class="form-control" id="talla3" >
+                    </div>
+                    <div class="form-group">
+                        <label for="talla4">L</label>
+                        <input type="number" value="0" name="talla4" required class="form-control" id="talla4" >
+                    </div>
+                    <div class="form-group">
+                        <label for="talla5">XL</label>
+                        <input type="number" value="0" name="talla5" required class="form-control" id="talla5" >
+                    </div>
+                    <div class="form-group">
+                        <label for="talla6">XXL</label>
+                        <input type="number" value="0" name="talla6" required class="form-control" id="talla6" >
+                    </div>
+
                     <button type="submit" class="btn btn-primary">modificar</button>
                 </form>
             </div>
         </div>
-      
+
         <!-- ------------------------contenido-------------------------- -->
-         <footer class="footer text-center text-light">
+        <footer class="footer text-center text-light">
             <!-- Grid container -->
             <div class="container p-4 pb-0">
                 <!-- Section: Social media -->

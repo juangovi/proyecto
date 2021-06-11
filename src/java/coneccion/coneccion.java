@@ -209,34 +209,33 @@ public class coneccion {
         return categorias;
     }
 
-    public Paginacion todoslosproductospaginados(HttpServletRequest request,List<Categorias> categorias) throws ClassNotFoundException, SQLException {
+    public Paginacion todoslosproductospaginados(HttpServletRequest request, List<Categorias> categorias) throws ClassNotFoundException, SQLException {
         List<productos> listapro = new ArrayList<productos>();
         abriscon();
         int resporpag = 9;
         int pag;
-        String filtros="";
-        if (request.getParameter("boton")!=null){
-            filtros +="WHERE";
-            boolean primero=true;
+        String filtros = "";
+        if (request.getParameter("boton") != null) {
+            filtros += "WHERE";
+            boolean primero = true;
             for (Categorias cat : categorias) {
-               if(request.getParameter("categoria"+cat.getId())!=null){
-                    if(primero){
-                    primero=false;
-                }else{
-                    filtros+="OR";
+                if (request.getParameter("categoria" + cat.getId()) != null) {
+                    if (primero) {
+                        primero = false;
+                    } else {
+                        filtros += "OR";
+                    }
+                    String id = request.getParameter("categoria" + cat.getId());
+                    filtros += " categoria=" + id + " ";
                 }
-                    String id=request.getParameter("categoria"+cat.getId());
-                    filtros+=" categoria="+id+" ";
-               }
-                
-                    
+
             }
-            if (request.getParameter("busqueda")!=null) {
+            if (request.getParameter("busqueda") != null) {
                 if (!primero) {
-                    filtros+="AND";
+                    filtros += "AND";
                 }
-                String busqueda=request.getParameter("busqueda");
-                filtros+=" descripcion LIKE '%"+busqueda+"%' ";
+                String busqueda = request.getParameter("busqueda");
+                filtros += " descripcion LIKE '%" + busqueda + "%' ";
             }
         }
         if (request == null || request.getParameter("pag") == null) {
@@ -244,7 +243,7 @@ public class coneccion {
         } else {
             pag = Integer.parseInt(request.getParameter("pag"));
         }
-        String sql = "SELECT COUNT(*) res FROM productos "+filtros;
+        String sql = "SELECT COUNT(*) res FROM productos " + filtros;
         System.out.println(sql);
         pst = cn.prepareStatement(sql);
         rs = pst.executeQuery();
@@ -254,7 +253,7 @@ public class coneccion {
             numpag++;
         }
         int firspag = (pag - 1) * resporpag;
-        sql = "SELECT * FROM productos "+filtros+" LIMIT " + firspag + " , " + resporpag;
+        sql = "SELECT * FROM productos " + filtros + " LIMIT " + firspag + " , " + resporpag;
         pst = cn.prepareStatement(sql);
         rs = pst.executeQuery();
         while (rs.next()) {
@@ -339,67 +338,66 @@ public class coneccion {
             pst.setInt(2, lp.getTalla());
             pst.setInt(3, lp.getCantidad());
             pst.executeUpdate();
-            sql="UPDATE tallas SET cantidad=(SELECT cantidad FROM tallas WHERE id = "+lp.getTalla()+")-1 WHERE id ="+lp.getTalla();
+            sql = "UPDATE tallas SET cantidad=(SELECT cantidad FROM tallas WHERE id = " + lp.getTalla() + ")-1 WHERE id =" + lp.getTalla();
             pst = cn.prepareStatement(sql);
             pst.executeUpdate();
         }
-        
+
         cerrarconeccion();
         return true;
     }
-    
+
     public List<Pedido> obtenerpedidoscliente(int usu) throws ClassNotFoundException, SQLException {
         abriscon();
-            String sql = "SELECT * FROM pedidos WHERE usuario ="+usu+" ORDER BY fecha DESC";
+        String sql = "SELECT * FROM pedidos WHERE usuario =" + usu + " ORDER BY fecha DESC";
+        System.out.println(sql);
+        pst = cn.prepareStatement(sql);
+        rs = pst.executeQuery();
+        List<Pedido> lista = new ArrayList<Pedido>();
+
+        while (rs.next()) {
+            int id = rs.getInt("id");
+            int usuario = rs.getInt("usuario");
+            Date fecha = rs.getDate("fecha");
+            String estado = rs.getString("estado");
+            String codigopedido = rs.getString("codigopedido");
+            double total = rs.getDouble("total");
+            Pedido pedido = new Pedido(id, usuario, fecha, estado, codigopedido, total);
+            lista.add(pedido);
+        }
+        for (Pedido lista1 : lista) {
+            sql = "SELECT * FROM linea_pedidos WHERE codigopedido='" + lista1.getCodigopedido() + "'";
             System.out.println(sql);
             pst = cn.prepareStatement(sql);
             rs = pst.executeQuery();
-            List<Pedido> lista=new ArrayList<Pedido>();
-            
+            List<Linea_pedido> listalp = new ArrayList<Linea_pedido>();
             while (rs.next()) {
-                int id=rs.getInt("id");
-                int usuario=rs.getInt("usuario");
-                Date fecha=rs.getDate("fecha");
-                String estado=rs.getString("estado");
-                String codigopedido=rs.getString("codigopedido");
-                double total=rs.getDouble("total");
-                Pedido pedido=new Pedido(id, usuario, fecha, estado, codigopedido,total);
-                lista.add(pedido);
+                int id = rs.getInt("id");
+                String codigopedido = rs.getString("codigopedido");
+                int talla = rs.getInt("producto");
+                int cantidad = rs.getInt("cantidad");
+                Linea_pedido lp = new Linea_pedido(id, codigopedido, talla, cantidad);
+                listalp.add(lp);
             }
-            for (Pedido lista1 : lista) {
-                sql = "SELECT * FROM linea_pedidos WHERE codigopedido='"+lista1.getCodigopedido()+"'";
-                System.out.println(sql);
-                pst = cn.prepareStatement(sql);
-                rs = pst.executeQuery();
-                List<Linea_pedido> listalp=new ArrayList<Linea_pedido>();
-                while (rs.next()) {
-                    int id=rs.getInt("id");
-                    String codigopedido=rs.getString("codigopedido");
-                    int talla=rs.getInt("producto");
-                    int cantidad=rs.getInt("cantidad");
-                    Linea_pedido lp=new Linea_pedido(id, codigopedido, talla, cantidad);
-                    listalp.add(lp);
-                }
-                lista1.setLinea_pedidos(listalp);
+            lista1.setLinea_pedidos(listalp);
         }
-            for (Pedido lista1 : lista) {
-                for (Linea_pedido listalp1 : lista1.getLinea_pedidos()) {
-               sql = "SELECT * FROM tallas WHERE id="+listalp1.getTalla();
-               System.out.println(sql);
+        for (Pedido lista1 : lista) {
+            for (Linea_pedido listalp1 : lista1.getLinea_pedidos()) {
+                sql = "SELECT * FROM tallas WHERE id=" + listalp1.getTalla();
+                System.out.println(sql);
                 pst = cn.prepareStatement(sql);
                 rs = pst.executeQuery();
                 rs.next();
                 listalp1.setproducto(rs.getInt("producto"));
+            }
         }
-        }
-            
-            
-            
+
         cerrarconeccion();
         return lista;
     }
-    public boolean cancelarped(int id) throws ClassNotFoundException, SQLException{
-         abriscon();
+
+    public boolean cancelarped(int id) throws ClassNotFoundException, SQLException {
+        abriscon();
         try {
 
             String sql = "UPDATE pedidos SET estado='cancelado' WHERE id=?";
@@ -415,9 +413,9 @@ public class coneccion {
         cerrarconeccion();
         return true;
 
-        
     }
-    public boolean modificacion(String sql) throws ClassNotFoundException, SQLException{
+
+    public boolean modificacion(String sql) throws ClassNotFoundException, SQLException {
         abriscon();
         try {
 
@@ -429,102 +427,101 @@ public class coneccion {
             return false;
         }
         cerrarconeccion();
-       return true;   
+        return true;
     }
-    
-   public List<Pedido> obtenerpedidos(HttpServletRequest request) throws ClassNotFoundException, SQLException {
+
+    public List<Pedido> obtenerpedidos(HttpServletRequest request) throws ClassNotFoundException, SQLException {
         abriscon();
-            String filtro="";
-            if(request.getParameter("buqueda")!=null){
-            
-            String fil="";
+        String filtro = "";
+        if (request.getParameter("buqueda") != null) {
+
+            String fil = "";
             List<String> filtros = new ArrayList<String>();
-            if(request.getParameter("fecha1")!=null && !request.getParameter("fecha1").equals("")){
+            if (request.getParameter("fecha1") != null && !request.getParameter("fecha1").equals("")) {
                 filtros.add(request.getParameter("fecha1"));
             }
-            if(request.getParameter("fecha2")!=null && !request.getParameter("fecha2").equals("")){
+            if (request.getParameter("fecha2") != null && !request.getParameter("fecha2").equals("")) {
                 filtros.add(request.getParameter("fecha2"));
             }
-                System.out.println(filtros.size());
-            if (filtros.size()>2) {
-                fil+="fecha BETWEEN '"+request.getParameter("fecha1")+"' AND '"+request.getParameter("fecha12")+",";
-            }else if(!filtros.isEmpty()){
-                fil+="fecha ='"+filtros.get(0)+"'";
+            System.out.println(filtros.size());
+            if (filtros.size() > 2) {
+                fil += "fecha BETWEEN '" + request.getParameter("fecha1") + "' AND '" + request.getParameter("fecha12") + ",";
+            } else if (!filtros.isEmpty()) {
+                fil += "fecha ='" + filtros.get(0) + "'";
             }
-                if (request.getParameter("usuario")!=null && !request.getParameter("usuario").equals("")) {
-                    if (!filtros.isEmpty()) {
-                        fil+=" AND ";
-                    }
-                    fil+="usuario=(SELECT id FROM usuarios WHERE nick LIKE '%"+request.getParameter("usuario")+"%')";
+            if (request.getParameter("usuario") != null && !request.getParameter("usuario").equals("")) {
+                if (!filtros.isEmpty()) {
+                    fil += " AND ";
                 }
-                if (!fil.equals("")) {
-                   filtro=" WHERE "+fil; 
-                }
+                fil += "usuario=(SELECT id FROM usuarios WHERE nick LIKE '%" + request.getParameter("usuario") + "%')";
             }
-            String sql = "SELECT * FROM pedidos"+filtro+" ORDER BY fecha DESC";
+            if (!fil.equals("")) {
+                filtro = " WHERE " + fil;
+            }
+        }
+        String sql = "SELECT * FROM pedidos" + filtro + " ORDER BY fecha DESC";
+        System.out.println(sql);
+        pst = cn.prepareStatement(sql);
+        rs = pst.executeQuery();
+        List<Pedido> lista = new ArrayList<Pedido>();
+
+        while (rs.next()) {
+            int id = rs.getInt("id");
+            int usuario = rs.getInt("usuario");
+            Date fecha = rs.getDate("fecha");
+            String estado = rs.getString("estado");
+            String codigopedido = rs.getString("codigopedido");
+            double total = rs.getDouble("total");
+            Pedido pedido = new Pedido(id, usuario, fecha, estado, codigopedido, total);
+            lista.add(pedido);
+        }
+        for (Pedido lista1 : lista) {
+            sql = "SELECT * FROM linea_pedidos WHERE codigopedido='" + lista1.getCodigopedido() + "'";
             System.out.println(sql);
             pst = cn.prepareStatement(sql);
             rs = pst.executeQuery();
-            List<Pedido> lista=new ArrayList<Pedido>();
-            
+            List<Linea_pedido> listalp = new ArrayList<Linea_pedido>();
             while (rs.next()) {
-                int id=rs.getInt("id");
-                int usuario=rs.getInt("usuario");
-                Date fecha=rs.getDate("fecha");
-                String estado=rs.getString("estado");
-                String codigopedido=rs.getString("codigopedido");
-                double total=rs.getDouble("total");
-                Pedido pedido=new Pedido(id, usuario, fecha, estado, codigopedido,total);
-                lista.add(pedido);
+                int id = rs.getInt("id");
+                String codigopedido = rs.getString("codigopedido");
+                int talla = rs.getInt("producto");
+                int cantidad = rs.getInt("cantidad");
+                Linea_pedido lp = new Linea_pedido(id, codigopedido, talla, cantidad);
+                listalp.add(lp);
             }
-            for (Pedido lista1 : lista) {
-                sql = "SELECT * FROM linea_pedidos WHERE codigopedido='"+lista1.getCodigopedido()+"'";
-                System.out.println(sql);
-                pst = cn.prepareStatement(sql);
-                rs = pst.executeQuery();
-                List<Linea_pedido> listalp=new ArrayList<Linea_pedido>();
-                while (rs.next()) {
-                    int id=rs.getInt("id");
-                    String codigopedido=rs.getString("codigopedido");
-                    int talla=rs.getInt("producto");
-                    int cantidad=rs.getInt("cantidad");
-                    Linea_pedido lp=new Linea_pedido(id, codigopedido, talla, cantidad);
-                    listalp.add(lp);
-                }
-                lista1.setLinea_pedidos(listalp);
+            lista1.setLinea_pedidos(listalp);
         }
-            for (Pedido lista1 : lista) {
-                for (Linea_pedido listalp1 : lista1.getLinea_pedidos()) {
-               sql = "SELECT * FROM tallas WHERE id="+listalp1.getTalla();
-               System.out.println(sql);
+        for (Pedido lista1 : lista) {
+            for (Linea_pedido listalp1 : lista1.getLinea_pedidos()) {
+                sql = "SELECT * FROM tallas WHERE id=" + listalp1.getTalla();
+                System.out.println(sql);
                 pst = cn.prepareStatement(sql);
                 rs = pst.executeQuery();
                 rs.next();
                 listalp1.setproducto(rs.getInt("producto"));
+            }
         }
-        }
-            
-            
-            
+
         cerrarconeccion();
         return lista;
     }
-   public List<Usuario> gettodosusurarios(HttpServletRequest request) throws ClassNotFoundException, SQLException{
-       abriscon();
-       String filtro="";
-       if(request.getParameter("buqueda")!=null){
-           
-            if(request.getParameter("usuario")!=null && !request.getParameter("usuario").equals("")){
-                filtro=" WHERE nick LIKE '%"+request.getParameter("usuario")+"%'";
+
+    public List<Usuario> gettodosusurarios(HttpServletRequest request) throws ClassNotFoundException, SQLException {
+        abriscon();
+        String filtro = "";
+        if (request.getParameter("buqueda") != null) {
+
+            if (request.getParameter("usuario") != null && !request.getParameter("usuario").equals("")) {
+                filtro = " WHERE nick LIKE '%" + request.getParameter("usuario") + "%'";
             }
-       }
-       List<Usuario> lista=new ArrayList<Usuario>();
-       String sql = "SELECT * FROM usuarios"+filtro;
-       System.out.println(sql);
-       pst = cn.prepareStatement(sql);
-       rs = pst.executeQuery();
-       while(rs.next()){
-           int id = rs.getInt("id");
+        }
+        List<Usuario> lista = new ArrayList<Usuario>();
+        String sql = "SELECT * FROM usuarios" + filtro;
+        System.out.println(sql);
+        pst = cn.prepareStatement(sql);
+        rs = pst.executeQuery();
+        while (rs.next()) {
+            int id = rs.getInt("id");
             String nombre = rs.getString("nombre");
             String apellidos = rs.getString("apellidos");
             String nick = rs.getString("nick");
@@ -538,15 +535,16 @@ public class coneccion {
             String token = rs.getString("token");
             Usuario usuario = new Usuario(id, nombre, apellidos, nick, email, password, rol, direccion, geoloc, estado, imagen, token);
             lista.add(usuario);
-       }
-       
-       cerrarconeccion();
-       return lista;
-   }
-    public boolean cambiarestado(String id, String st) throws ClassNotFoundException, SQLException{
+        }
+
+        cerrarconeccion();
+        return lista;
+    }
+
+    public boolean cambiarestado(String id, String st) throws ClassNotFoundException, SQLException {
         abriscon();
         try {
-            String sql="UPDATE usuarios SET estado="+st+" WHERE id = "+id;
+            String sql = "UPDATE usuarios SET estado=" + st + " WHERE id = " + id;
             pst = cn.prepareStatement(sql);
             pst.executeUpdate();
 
@@ -555,7 +553,80 @@ public class coneccion {
             return false;
         }
         cerrarconeccion();
-       return true;   
+        return true;
     }
-           
+
+    public Usuario getallUser(String iduser) {
+        Usuario usuario = null;
+        try {
+            abriscon();
+            String sql = "SELECT * FROM usuarios WHERE id=" + iduser;
+            pst = cn.prepareStatement(sql);
+            rs = pst.executeQuery();
+            rs.next();
+            int id = rs.getInt("id");
+            String nombre = rs.getString("nombre");
+            String apellidos = rs.getString("apellidos");
+            String nick = rs.getString("nick");
+            String email = rs.getString("email");
+            String password = rs.getString("password");
+            int rol = rs.getInt("rol");
+            String direccion = rs.getString("direccion");
+            String geoloc = rs.getString("geoloc");
+            int estado = rs.getInt("estado");
+            String imagen = rs.getString("imagen");
+            String token = rs.getString("token");
+            usuario = new Usuario(id, nombre, apellidos, nick, email, password, rol, direccion, geoloc, id, imagen, token);
+
+            cerrarconeccion();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(coneccion.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(coneccion.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return usuario;
+    }
+
+    public boolean añadirproducto(String categoria, String descripcion, String precio, String imagen) throws ClassNotFoundException, SQLException {
+        abriscon();
+        String sql = "INSERT INTO productos(categoria, descripcion, precio, imagen) VALUES (?,?,?,?)";
+        pst = cn.prepareStatement(sql);
+        pst.setInt(1, Integer.parseInt(categoria));
+        pst.setString(2, descripcion);
+        pst.setDouble(3, Double.parseDouble(precio));
+        pst.setString(4, imagen);
+        pst.executeUpdate();
+        cerrarconeccion();
+        return true;
+    }
+
+    public void adtallas(String t1, String t2, String t3, String t4, String t5, String t6, String t7, String name) throws SQLException, ClassNotFoundException {
+        abriscon();
+        String sql = "SELECT id FROM productos WHERE imagen= '" + name + "'";
+        pst = cn.prepareStatement(sql);
+        rs = pst.executeQuery();
+        rs.next();
+        int i = rs.getInt("id");
+        sql = "INSERT INTO tallas (id, talla, cantidad, producto) VALUES (NULL, 'XXS', '" + t1 + "', '" + i + "'), (NULL, 'XS', '" + t2 + "', '" + i + "'), (NULL, 'S', '" + t3 + "', '" + i + "'), (NULL, 'M', '" + t4 + "', '" + i + "'), (NULL, 'L', '" + t5 + "', '" + i + "'), (NULL, 'XL', '" + t6 + "', '" + i + "'), (NULL, 'XXL', '" + t7 + "', '" + i + "')";
+        System.out.println(sql);
+        pst = cn.prepareStatement(sql);
+         pst.executeUpdate();
+        cerrarconeccion();
+    }
+    public List<Tallas> obtenertodatallas(String id) throws ClassNotFoundException, SQLException {
+        abriscon();
+        String sql = "SELECT * FROM tallas WHERE producto=" + id + " GROUP BY talla";
+        pst = cn.prepareStatement(sql);
+        rs = pst.executeQuery();
+        List<Tallas> lista = new ArrayList<Tallas>();
+
+        while (rs.next()) {
+
+            Tallas tallas = new Tallas(rs.getInt("id"), rs.getString("talla"),rs.getInt("cantidad"));
+            lista.add(tallas);
+        }
+        cerrarconeccion();
+        
+        return lista;
+    }
 }

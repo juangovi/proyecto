@@ -224,13 +224,13 @@
                                 rol="admin";
                             }
                             int st=0;
-                            String boton="desbloquear";
+                            String boton="bloquear";
                             if(lista1.getEstado()==0){
-                                estado="activo";
-                                boton="bloquear";
+                                estado="bloqueado";
+                                boton="desbloquear";
                                 st=1;
                             }else{
-                                estado="bloqueado";
+                                estado="activo";
                             }
                                 
                         

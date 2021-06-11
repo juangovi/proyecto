@@ -4,6 +4,7 @@
     Author     : juana
 --%>
 
+<%@page import="modelo.Tallas"%>
 <%@page import="modelo.Linea_pedido"%>
 <%@page import="modelo.Categorias"%>
 <%@page import="java.util.List"%>
@@ -22,34 +23,35 @@
             boolean log = false;
             HttpSession sesion = request.getSession();
             coneccion con = new coneccion();
-            ServletContext contexto=getServletContext();
+            ServletContext contexto = getServletContext();
             RequestDispatcher rd;
             if (sesion.getAttribute("user") != null) {
                 user = (Usuario) sesion.getAttribute("user");
                 log = true;
                 nom = user.getNombre();
-            }else{
-                rd=contexto.getRequestDispatcher("/index.jsp");
+            } else {
+                rd = contexto.getRequestDispatcher("/index.jsp");
                 rd.forward(request, response);
             }
-            
-            String disabled="disabled";
-            String active="";
-            if(log && sesion.getAttribute("carrito")!=null){
+            String proid = request.getParameter("id");
+            String disabled = "disabled";
+            String active = "";
+            if (log && sesion.getAttribute("carrito") != null) {
                 List<Linea_pedido> lista = (List<Linea_pedido>) sesion.getAttribute("carrito");
-                if(!lista.isEmpty()){
-                    disabled="";
-                    active="active";
+                if (!lista.isEmpty()) {
+                    disabled = "";
+                    active = "active";
                 }
             }
-            String id=request.getParameter("id");
-            Usuario usereditar=con.getallUser(id);
+            List<Categorias> categorias = con.obtenercategorias();
+            List<Tallas> tallas = con.obtenertodatallas(proid);
+            productos pro = con.obtenerproducto(proid);
         %>
         <!---------------------codigo----------------------->
         <!-- Required meta tags -->
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="css/estilos.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
@@ -95,7 +97,7 @@
                         <li class="nav-item active">
                             <a class="nav-link" href="catalogo.jsp">catalogo <span class="sr-only">(current)</span></a>
                         </li>
-                        
+
 
                         <li class="nav-item <%=active%>">
                             <a class="nav-link <%=disabled%>" href="carrito.jsp">carrito</a>
@@ -198,37 +200,66 @@
         <div class="container bg-light rounded mt-5 p-3 sombras login">
             <div>
                 <h1 class="text-center p-3">
-                    EDITAR
+                    AÑADIR PRODUCTO
                 </h1>
             </div>
             <div class="px-md-5">
-                <form method="post" action="administrarmodificarusuario">
-                    
+                <form method="post" action="modificarproducto" enctype="multipart/form-data">
+
                     <div class="form-group">
-                        <label for="nombre">nombre</label>
-                        <input type="text" name="nombre" value="<%=usereditar.getNombre()%>" class="form-control" id="nombre" >
+                        <label for="descripcion">descripcion</label>
+                        <input type="text" name="descripcion" required="" value="<%=pro.getDescripcion()%>" class="form-control" id="descripcion" >
                     </div>
                     <div class="form-group">
-                        <label for="apellido">apellido</label>
-                        <input type="text" name="apellido" value="<%=usereditar.getApellidos()%>" class="form-control" id="apellido" >
+                        <label for="categoria">categoria</label>
+                        <select name="categoria" required id="categoria">
+                            <%
+                                for (Categorias cat : categorias) {
+                                    if (cat.getId() == pro.getCategoria()) {
+
+                            %>
+                            <option value="<%=cat.getId()%>" selected><%=cat.getNombre()%></option>
+                            <%
+                            } else {
+                            %>
+                            <option value="<%=cat.getId()%>"><%=cat.getNombre()%></option>
+                            <%
+                                    }
+                                }
+                            %>
+                        </select>
                     </div>
                     <div class="form-group">
-                        <label for="exampleInputPassword1">direccion</label>
-                        <input type="direccion" name="direccion" value="<%=usereditar.getDireccion()%>" class="form-control" id="direccion" >
+                        <label for="precio">precio</label>
+                        <input type="number" step="any" name="precio" value="<%=pro.getPrecio()%>" required class="form-control" id="precio" >
                     </div>
+
                     <div class="form-group">
-                        <label for="exampleInputPassword1">nueva contraseña</label>
-                        <input type="password" name="password" class="form-control" id="exampleInputPassword1">
+                        <label for="foto">imagen del producto</label>
+                        <input type="file" name="foto" accept="image/png, image/jpeg" class="form-control-file" id="foto">
                     </div>
-                        
-                        <input type="hidden" name="id" value="<%=id%>"/>
+                    <h1 class="text-center p-3">
+                        tallas
+                    </h1>
+
+                    <%
+                        for (Tallas talla : tallas) {
+                    %>
+                    <div class="form-group">
+                        <label for="talla"><%=talla.getTalla()%></label>
+                        <input type="number"  name="<%=talla.getId()%>" value="<%=talla.getCantidad()%>" required class="form-control" id="talla" >
+                    </div>
+                    <%
+                        }
+                    %>
+                    <input type="hidden" name="idpro" value="<%=proid%>"/>
                     <button type="submit" class="btn btn-primary">modificar</button>
                 </form>
             </div>
         </div>
-      
+
         <!-- ------------------------contenido-------------------------- -->
-         <footer class="footer text-center text-light">
+        <footer class="footer text-center text-light">
             <!-- Grid container -->
             <div class="container p-4 pb-0">
                 <!-- Section: Social media -->

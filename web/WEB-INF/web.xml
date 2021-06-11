@@ -40,6 +40,22 @@
         <servlet-name>bloquear</servlet-name>
         <servlet-class>controladores.bloquear</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>administrarmodificarusuario</servlet-name>
+        <servlet-class>controladores.administrarmodificarusuario</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>nuevoproducto</servlet-name>
+        <servlet-class>controladores.nuevoproducto</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>editarproducto</servlet-name>
+        <servlet-class>controladores.editarproducto</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>modificarproducto</servlet-name>
+        <servlet-class>controladores.modificarproducto</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>inicio</servlet-name>
         <url-pattern>/inicio</url-pattern>
@@ -79,6 +95,22 @@
     <servlet-mapping>
         <servlet-name>bloquear</servlet-name>
         <url-pattern>/bloquear</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>administrarmodificarusuario</servlet-name>
+        <url-pattern>/administrarmodificarusuario</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>nuevoproducto</servlet-name>
+        <url-pattern>/nuevoproducto</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>editarproducto</servlet-name>
+        <url-pattern>/editarproducto</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>modificarproducto</servlet-name>
+        <url-pattern>/modificarproducto</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
