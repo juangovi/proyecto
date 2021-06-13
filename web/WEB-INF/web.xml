@@ -48,10 +48,7 @@
         <servlet-name>nuevoproducto</servlet-name>
         <servlet-class>controladores.nuevoproducto</servlet-class>
     </servlet>
-    <servlet>
-        <servlet-name>editarproducto</servlet-name>
-        <servlet-class>controladores.editarproducto</servlet-class>
-    </servlet>
+  
     <servlet>
         <servlet-name>modificarproducto</servlet-name>
         <servlet-class>controladores.modificarproducto</servlet-class>
@@ -108,10 +105,7 @@
         <servlet-name>nuevoproducto</servlet-name>
         <url-pattern>/nuevoproducto</url-pattern>
     </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>editarproducto</servlet-name>
-        <url-pattern>/editarproducto</url-pattern>
-    </servlet-mapping>
+    
     <servlet-mapping>
         <servlet-name>modificarproducto</servlet-name>
         <url-pattern>/modificarproducto</url-pattern>

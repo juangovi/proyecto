@@ -33,7 +33,7 @@ import modelo.productos;
 public class coneccion {
 
     private final static String drv = "com.mysql.jdbc.Driver";
-    private final static String db = "jdbc:mysql://localhost:3306/vaquerosjd";
+    private final static String db = "jdbc:mysql://212.104.171.5:3306/vaquerosjd";
     private final static String usserandpass = "root";
     private Connection cn;
     private ResultSet rs;
@@ -45,8 +45,8 @@ public class coneccion {
 
     private void abriscon() throws ClassNotFoundException, SQLException {
         Class.forName(drv);
-        //cn = DriverManager.getConnection(db, "super", "trebujena");
-        cn = DriverManager.getConnection(db, "root", "");
+        cn = DriverManager.getConnection(db, "super", "trebujena");
+        //cn = DriverManager.getConnection(db, "root", "");
         System.out.println("conectado");
     }
 
