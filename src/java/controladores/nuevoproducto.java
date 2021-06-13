@@ -18,6 +18,8 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
@@ -96,6 +98,10 @@ public class nuevoproducto extends HttpServlet {
                     String t6 = request.getParameter("talla5");
                     String t7 = request.getParameter("talla6");
                     con.adtallas(t1, t2, t3, t4, t5, t6, t7, imagen);
+                    RequestDispatcher rd;
+                    ServletContext contexto = getServletContext();
+                    rd = contexto.getRequestDispatcher("/index.jsp");
+                    rd.forward(request, response);
                 }
             }
         } catch (SQLException ex) {
@@ -103,6 +109,7 @@ public class nuevoproducto extends HttpServlet {
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(nuevoproducto.class.getName()).log(Level.SEVERE, null, ex);
         }
+
     }
 
 // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

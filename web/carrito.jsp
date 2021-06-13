@@ -24,6 +24,8 @@
             boolean log = false;
             HttpSession sesion = request.getSession();
             coneccion con = new coneccion();
+            ServletContext contexto = getServletContext();
+            RequestDispatcher rd;
             if (sesion.getAttribute("carrito") == null) {
                 List<Linea_pedido> lista = new ArrayList<Linea_pedido>();
                 sesion.setAttribute("carrito", lista);
@@ -33,14 +35,18 @@
                 user = (Usuario) sesion.getAttribute("user");
                 log = true;
                 nom = user.getNombre();
+            }else {
+                rd = contexto.getRequestDispatcher("/index.jsp");
+                rd.forward(request, response);
             }
-            String disabled="disabled";
-            String active="";
-            if(log && sesion.getAttribute("carrito")!=null){
+             
+            String disabled = "disabled";
+            String active = "";
+            if (log && sesion.getAttribute("carrito") != null) {
                 List<Linea_pedido> lp = (List<Linea_pedido>) sesion.getAttribute("carrito");
-                if(!lp.isEmpty()){
-                    disabled="";
-                    active="active";
+                if (!lp.isEmpty()) {
+                    disabled = "";
+                    active = "active";
                 }
             }
         %>
@@ -94,7 +100,7 @@
                         <li class="nav-item active">
                             <a class="nav-link" href="catalogo.jsp">catalogo <span class="sr-only">(current)</span></a>
                         </li>
-                       
+
                         <li class="nav-item <%=active%>">
                             <a class="nav-link <%=disabled%>" href="carrito.jsp">carrito</a>
                         </li>
@@ -119,8 +125,26 @@
                         </button>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
                             <a class="dropdown-item" href="modificarperfil.jsp">mi perfil</a>
+                            <a class="dropdown-item" href="pedidos.jsp">mis pedidos</a>
                             <a class="dropdown-item" href="cerrarSesion">cerrar sesion</a>
+                            <%
+                                if (user.getRol() > 0) {
+                            %>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="añadirproducto.jsp">nuevo producto</a>
+                            <a class="dropdown-item" href="administrarpedidos.jsp">administrar pedidos</a>
 
+                            <%
+                                }
+                            %>
+                            <%
+                                if (user.getRol() > 1) {
+                            %>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="administrarusuarios.jsp">usuarios</a>
+                            <%
+                                }
+                            %>
                         </div>
                         <%
                         } else {
@@ -163,8 +187,26 @@
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
                                     <a class="dropdown-item" href="modificarperfil.jsp">mi perfil</a>
+                                    <a class="dropdown-item" href="pedidos.jsp">mis pedidos</a>
                                     <a class="dropdown-item" href="cerrarSesion">cerrar sesion</a>
+                                    <%
+                                        if (user.getRol() > 0) {
+                                    %>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="añadirproducto.jsp">nuevo producto</a>
+                                    <a class="dropdown-item" href="administrarpedidos.jsp">administrar pedidos</a>
 
+                                    <%
+                                        }
+                                    %>
+                                    <%
+                                        if (user.getRol() > 1) {
+                                    %>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="administrarusuarios.jsp">usuarios</a>
+                                    <%
+                                        }
+                                    %>
                                 </div>
                                 <%
                                 } else {
@@ -199,8 +241,8 @@
 
                 for (Linea_pedido lp : lista) {
                     Tallas talla = con.obtenertalla(lp.getTalla());
-                    total += lp.getProducto().getPrecio()*lp.getCantidad();
-                    
+                    total += lp.getProducto().getPrecio() * lp.getCantidad();
+
             %>
             <div class="card mb-3">
                 <div class="row">
@@ -225,7 +267,7 @@
             </div>
             <%
                 }
-                sesion.setAttribute("total",total);
+                sesion.setAttribute("total", total);
             %>
             <div class="text-center">
                 <h3>total:<%=total%>€</h3>
@@ -234,7 +276,7 @@
         <div class="container text-center">
             <a class="btn btn-success mb-2" href="inicio" role="button">seguir comprando</a><br>
             <a class="btn btn-success mb-5" href="confirmacion" role="button">comfirmar reserva</a><br>
-            
+
         </div>
 
         <!-- ------------------------contenido-------------------------- -->

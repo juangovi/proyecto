@@ -1,17 +1,10 @@
 <%-- 
-    Document   : comprarproducto
-    Created on : 06-jun-2021, 13:45:23
-    Author     : juana
---%>
-
-<%@page import="modelo.Linea_pedido"%>
-<%@page import="modelo.Tallas"%>
-<%-- 
     Document   : index
     Created on : 24-mar-2021, 10:51:55
     Author     : juana
 --%>
 
+<%@page import="modelo.Linea_pedido"%>
 <%@page import="modelo.Categorias"%>
 <%@page import="java.util.List"%>
 <%@page import="modelo.productos"%>
@@ -29,16 +22,10 @@
             boolean log = false;
             HttpSession sesion = request.getSession();
             coneccion con = new coneccion();
+            List<productos> listapro = con.obtenerultimospedidos();
+            List<Categorias> categorias = con.obtenercategorias();
             ServletContext contexto = getServletContext();
             RequestDispatcher rd;
-            if (request.getParameter("pro") == null) {
-                
-                rd = contexto.getRequestDispatcher("/catalogo.jsp");
-                rd.forward(request, response);
-            }
-            String proid = request.getParameter("pro");
-            productos producto = con.obtenerproducto(proid);
-            List<Tallas> lista = con.obtenertallas(producto.getId());
             if (sesion.getAttribute("user") != null) {
                 user = (Usuario) sesion.getAttribute("user");
                 log = true;
@@ -47,11 +34,15 @@
                 rd = contexto.getRequestDispatcher("/index.jsp");
                 rd.forward(request, response);
             }
+            if (user.getRol() < 1) {
+                rd = contexto.getRequestDispatcher("/index.jsp");
+                rd.forward(request, response);
+            }
             String disabled = "disabled";
             String active = "";
             if (log && sesion.getAttribute("carrito") != null) {
-                List<Linea_pedido> lp = (List<Linea_pedido>) sesion.getAttribute("carrito");
-                if (!lp.isEmpty()) {
+                List<Linea_pedido> lista = (List<Linea_pedido>) sesion.getAttribute("carrito");
+                if (!lista.isEmpty()) {
                     disabled = "";
                     active = "active";
                 }
@@ -107,6 +98,8 @@
                         <li class="nav-item active">
                             <a class="nav-link" href="catalogo.jsp">catalogo <span class="sr-only">(current)</span></a>
                         </li>
+
+
                         <li class="nav-item <%=active%>">
                             <a class="nav-link <%=disabled%>" href="carrito.jsp">carrito</a>
                         </li>
@@ -123,6 +116,7 @@
 
 
                         <%
+
                             if (log) {
                         %>
                         <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
@@ -241,94 +235,56 @@
         <!-- menusito whey -->
 
         <!-- ------------------------contenido-------------------------- -->
-        <div class="container my-2 my-md-5 bg-white rounded sombras">
-            <div class="text-center">
-                <h1 class="font-weight-bold">
-                    COMPRAR
+        <div class="container bg-light rounded mt-5 p-3 sombras login">
+            <div>
+                <h1 class="text-center p-3">
+                    REGISTRO
                 </h1>
             </div>
-            <div class="container-fluid my-3">
-                <div class="row">
-                    <div class="col-md-5 my-3">
-                        <img src="<%=producto.getImagen()%>" class="img-fluid"><br>
+            <div class="px-md-5">
+                <form method="post" action="nuevousuarioadmin">
+                    <div class="form-group">
+                        <label for="usuario">usuario</label>
+                        <input type="text" name="usuario" class="form-control" id="usuario" required > 
                     </div>
-                    <div class="col-md-7">
-                        <div class="text-center">
-                            <h2>
-                                <%=producto.getDescripcion()%>
-                            </h2>
-                        </div>
-                        <div class="my-5">
-                            <h3>
-                                precio:<%=producto.getPrecio()%>€
-                            </h3>
-                        </div>
-                        <form method="POST" action="comprarproducto">
-
-                            <select name="talla" class="form-control form-control-lg my-3">
-                                <%
-                                    boolean entra = false;
-                                    for (Tallas tallas : lista) {
-                                        entra = true;
-                                %>
-                                <option value="<%=tallas.getId()%>"><%=tallas.getTalla()%></option>
-                                <%
-                                    }
-                                %>
-                            </select>
-                            <input type="hidden" name="pro" value="<%=proid%>"/>
-                            <%
-                                if (entra) {
-
-                            %>
-                            <input type="submit" class="btn btn-primary btn-lg active" value="añadir al carrito" role="button" aria-pressed="true"/>
-                            <%                            } else {
-                            %>
-                            <a  class="btn btn-primary btn-lg disabled" role="button" aria-pressed="true">seleccione una talla</a>
-                            <%
-                                }
-                            %>
-                        </form>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" name="Email" class="form-control" id="email" required>
                     </div>
-                </div>
+                    <div class="form-group">
+                        <label for="nombre">nombre</label>
+                        <input type="text" name="nombre" class="form-control" id="nombre" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="apellido">apellido</label>
+                        <input type="text" name="apellido" class="form-control" id="apellido" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">direccion</label>
+                        <input type="direccion" name="direccion" class="form-control" id="direccion" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">contraseña</label>
+                        <input type="password" name="password" class="form-control" id="exampleInputPassword1" required>
+                    </div>
+                    <input type="hidden" name="geo" id="geo">
+
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" for="inputGroupSelect01">Options</label>
+                        </div>
+                        <select class="custom-select" id="inputGroupSelect01" name="rol">
+                            <option value="0">usuario</option>
+                            <option value="1">empleado</option>
+                            <option value="2">administrador</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Registrarse</button>
+                </form>
             </div>
         </div>
-        <!-- ventana modal -->
-        <div class="modal fade" id="exampleModal" tabindex="-1"  aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Iniciar sesion</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form class="px-4 py-3" method="post" action="inicio" id="formulario1" name="formulario1" onsubmit="return prueba(1)">
-                            <input type="hidden" name="volver" value="comprarproducto.jsp?pro=<%=producto.getId()%>"/>
-                            <div class="form-group">
-                                <label for="email1">usuario/email  <span class="erroruse" style="color: red;"></span></label>
-                                <input type="text" class="form-control" name="log" id="email1" placeholder="email@ejemplo.com">
-                            </div>
-                            <div class="form-group">
-                                <label for="password1">contraseña</label>
-                                <input type="password" class="form-control" name="pass" id="password1" placeholder="contraseña">
-                            </div>
-                            <div class="form-group">
-                                <div class="form-check">
 
-                                </div>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Entrar</button>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <a class="dropdown-item" href="iniciarSession.jsp">crear una cuenta nueva</a>
-
-                    </div>
-                </div>
-            </div>
-        </div>
         <!-- ------------------------contenido-------------------------- -->
         <footer class="footer text-center text-light">
             <!-- Grid container -->

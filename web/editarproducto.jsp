@@ -33,6 +33,10 @@
                 rd = contexto.getRequestDispatcher("/index.jsp");
                 rd.forward(request, response);
             }
+             if(user.getRol()<1){
+               rd = contexto.getRequestDispatcher("/index.jsp");
+                rd.forward(request, response); 
+            }
             String proid = request.getParameter("id");
             String disabled = "disabled";
             String active = "";
@@ -121,10 +125,28 @@
                                 aria-expanded="false">
                             <%=nom%>
                         </button>
-                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+                       <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
                             <a class="dropdown-item" href="modificarperfil.jsp">mi perfil</a>
+                            <a class="dropdown-item" href="pedidos.jsp">mis pedidos</a>
                             <a class="dropdown-item" href="cerrarSesion">cerrar sesion</a>
+                            <%
+                                if (user.getRol() > 0) {
+                            %>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="añadirproducto.jsp">nuevo producto</a>
+                            <a class="dropdown-item" href="administrarpedidos.jsp">administrar pedidos</a>
 
+                            <%
+                                }
+                            %>
+                            <%
+                                if (user.getRol() > 1) {
+                            %>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="administrarusuarios.jsp">usuarios</a>
+                            <%
+                                }
+                            %>
                         </div>
                         <%
                         } else {
@@ -165,11 +187,29 @@
                                         aria-expanded="false">
                                     <i class="fas fa-user" style="font-size: 200%;"></i>
                                 </button>
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
-                                    <a class="dropdown-item" href="modificarperfil.jsp">mi perfil</a>
-                                    <a class="dropdown-item" href="cerrarSesion">cerrar sesion</a>
+                               <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+                            <a class="dropdown-item" href="modificarperfil.jsp">mi perfil</a>
+                            <a class="dropdown-item" href="pedidos.jsp">mis pedidos</a>
+                            <a class="dropdown-item" href="cerrarSesion">cerrar sesion</a>
+                            <%
+                                if (user.getRol() > 0) {
+                            %>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="añadirproducto.jsp">nuevo producto</a>
+                            <a class="dropdown-item" href="administrarpedidos.jsp">administrar pedidos</a>
 
-                                </div>
+                            <%
+                                }
+                            %>
+                            <%
+                                if (user.getRol() > 1) {
+                            %>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="administrarusuarios.jsp">usuarios</a>
+                            <%
+                                }
+                            %>
+                        </div>
                                 <%
                                 } else {
                                 %>

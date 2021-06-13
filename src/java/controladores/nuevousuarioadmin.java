@@ -5,24 +5,27 @@
  */
 package controladores;
 
+import coneccion.coneccion;
+import controladores.utiles.Encriptar;
+import controladores.utiles.enviarcorreo;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import modelo.Linea_pedido;
+import modelo.Usuario;
 
 /**
  *
  * @author juana
  */
-public class eliminarcarrito extends HttpServlet {
+public class nuevousuarioadmin extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -36,34 +39,36 @@ public class eliminarcarrito extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        Encriptar encriptar = new Encriptar();
+        coneccion con = new coneccion();
+        ServletContext contexto = getServletContext();
+        RequestDispatcher rd;
+        enviarcorreo correo = new enviarcorreo();
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            HttpSession sesion = request.getSession();
-            ServletContext contexto = getServletContext();
-            RequestDispatcher rd;
-            if (sesion.getAttribute("user") == null) {
-                rd = contexto.getRequestDispatcher("/index.jsp");
+            String usuario = request.getParameter("usuario");
+            String Email = request.getParameter("Email");
+            String nombre = request.getParameter("nombre");
+            String apellido = request.getParameter("apellido");
+            String password = request.getParameter("password");
+            String geo = request.getParameter("geo");
+            String direccion = request.getParameter("direccion");
+            String enpass = encriptar.encriptacion(password);
+            int rol = Integer.parseInt(request.getParameter("rol"));
+            Usuario user = new Usuario(nombre, apellido, usuario, Email, enpass, direccion, geo, encriptar.encriptacion(usuario + enpass + Email), rol);
+
+            if (con.nuevousuario(user)) {
+                correo.enviarverificacion(Email, user.getToken());
+                rd = contexto.getRequestDispatcher("/usuariocreado.html");
+                rd.forward(request, response);
+            } else {
+
+                rd = contexto.getRequestDispatcher("/iniciarSession.jsp?error=0");
                 rd.forward(request, response);
             }
-            if (sesion.getAttribute("carrito") == null) {
-                List<Linea_pedido> lista = new ArrayList<Linea_pedido>();
-                sesion.setAttribute("carrito", lista);
-            }
-            List<Linea_pedido> lista = (List<Linea_pedido>) sesion.getAttribute("carrito");
-            int proid = Integer.parseInt(request.getParameter("del"));
-            for (Linea_pedido lista1 : lista) {
-                if (lista1.getTalla() == proid) {
-                    if (lista1.getCantidad() > 1) {
-                        lista1.setCantidad(lista1.getCantidad() - 1);
-                    } else if (lista1.getCantidad() <= 1) {
-                        lista.remove(lista1);
-                        break;
-                    }
-                }
-            }
-            sesion.setAttribute("carrito", lista);
-            rd = contexto.getRequestDispatcher("/carrito.jsp");
-            rd.forward(request, response);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(nuevousuario.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(nuevousuario.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

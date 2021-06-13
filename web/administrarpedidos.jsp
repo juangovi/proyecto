@@ -25,15 +25,20 @@
             boolean log = false;
             HttpSession sesion = request.getSession();
             coneccion con = new coneccion();
+            ServletContext contexto = getServletContext();
+                RequestDispatcher rd;
             if (sesion.getAttribute("user") != null) {
                 user = (Usuario) sesion.getAttribute("user");
                 log = true;
                 nom = user.getNombre();
             } else {
-                ServletContext contexto = getServletContext();
-                RequestDispatcher rd;
+                
                 rd = contexto.getRequestDispatcher("/index.jsp");
                 rd.forward(request, response);
+            }
+            if(user.getRol()<1){
+               rd = contexto.getRequestDispatcher("/index.jsp");
+                rd.forward(request, response); 
             }
             String disabled = "disabled";
             String active = "";
@@ -44,7 +49,7 @@
                     active = "active";
                 }
             }
-            
+
             List<Pedido> pedidos = con.obtenerpedidos(request);
         %>
         <!---------------------codigo----------------------->
@@ -123,8 +128,26 @@
                         </button>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
                             <a class="dropdown-item" href="modificarperfil.jsp">mi perfil</a>
+                            <a class="dropdown-item" href="pedidos.jsp">mis pedidos</a>
                             <a class="dropdown-item" href="cerrarSesion">cerrar sesion</a>
+                            <%
+                                if (user.getRol() > 0) {
+                            %>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="añadirproducto.jsp">nuevo producto</a>
+                            <a class="dropdown-item" href="administrarpedidos.jsp">administrar pedidos</a>
 
+                            <%
+                                }
+                            %>
+                            <%
+                                if (user.getRol() > 1) {
+                            %>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="administrarusuarios.jsp">usuarios</a>
+                            <%
+                                }
+                            %>
                         </div>
                         <%
                         } else {
@@ -167,8 +190,26 @@
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
                                     <a class="dropdown-item" href="modificarperfil.jsp">mi perfil</a>
+                                    <a class="dropdown-item" href="pedidos.jsp">mis pedidos</a>
                                     <a class="dropdown-item" href="cerrarSesion">cerrar sesion</a>
+                                    <%
+                                        if (user.getRol() > 0) {
+                                    %>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="añadirproducto.jsp">nuevo producto</a>
+                                    <a class="dropdown-item" href="administrarpedidos.jsp">administrar pedidos</a>
 
+                                    <%
+                                        }
+                                    %>
+                                    <%
+                                        if (user.getRol() > 1) {
+                                    %>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="administrarusuarios.jsp">usuarios</a>
+                                    <%
+                                        }
+                                    %>
                                 </div>
                                 <%
                                 } else {
@@ -272,13 +313,13 @@
 
                         <%
                             }
-                            if(ped.getEstado().equals("activo")){
+                            if (ped.getEstado().equals("activo")) {
                         %>
                         <a class="btn btn-danger" href="cancelarped?id=<%=ped.getId()%>" role="button">cancelar</a>
                         <a class="btn btn-warning" href="cerrarped?id=<%=ped.getId()%>" role="button">cerrar</a>
                         <%
-                }
-            %>
+                            }
+                        %>
                     </div>
 
                 </div>

@@ -56,6 +56,10 @@
         <servlet-name>modificarproducto</servlet-name>
         <servlet-class>controladores.modificarproducto</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>nuevousuarioadmin</servlet-name>
+        <servlet-class>controladores.nuevousuarioadmin</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>inicio</servlet-name>
         <url-pattern>/inicio</url-pattern>
@@ -111,6 +115,10 @@
     <servlet-mapping>
         <servlet-name>modificarproducto</servlet-name>
         <url-pattern>/modificarproducto</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>nuevousuarioadmin</servlet-name>
+        <url-pattern>/nuevousuarioadmin</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

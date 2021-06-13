@@ -36,16 +36,16 @@
                 rd = contexto.getRequestDispatcher("/index.jsp");
                 rd.forward(request, response);
             }
-             String disabled="disabled";
-            String active="";
-            if(log && sesion.getAttribute("carrito")!=null){
+            String disabled = "disabled";
+            String active = "";
+            if (log && sesion.getAttribute("carrito") != null) {
                 List<Linea_pedido> lp = (List<Linea_pedido>) sesion.getAttribute("carrito");
-                if(!lp.isEmpty()){
-                    disabled="";
-                    active="active";
+                if (!lp.isEmpty()) {
+                    disabled = "";
+                    active = "active";
                 }
             }
-           
+
             List<Pedido> pedidos = con.obtenerpedidoscliente(user.getId());
         %>
         <!---------------------codigo----------------------->
@@ -98,7 +98,7 @@
                         <li class="nav-item active">
                             <a class="nav-link" href="catalogo.jsp">catalogo <span class="sr-only">(current)</span></a>
                         </li>
-                       
+
                         <li class="nav-item <%=active%>">
                             <a class="nav-link <%=disabled%>" href="carrito.jsp">carrito</a>
                         </li>
@@ -123,8 +123,26 @@
                         </button>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
                             <a class="dropdown-item" href="modificarperfil.jsp">mi perfil</a>
+                            <a class="dropdown-item" href="pedidos.jsp">mis pedidos</a>
                             <a class="dropdown-item" href="cerrarSesion">cerrar sesion</a>
+                            <%
+                                if (user.getRol() > 0) {
+                            %>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="añadirproducto.jsp">nuevo producto</a>
+                            <a class="dropdown-item" href="administrarpedidos.jsp">administrar pedidos</a>
 
+                            <%
+                                }
+                            %>
+                            <%
+                                if (user.getRol() > 1) {
+                            %>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="administrarusuarios.jsp">usuarios</a>
+                            <%
+                                }
+                            %>
                         </div>
                         <%
                         } else {
@@ -167,8 +185,26 @@
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
                                     <a class="dropdown-item" href="modificarperfil.jsp">mi perfil</a>
+                                    <a class="dropdown-item" href="pedidos.jsp">mis pedidos</a>
                                     <a class="dropdown-item" href="cerrarSesion">cerrar sesion</a>
+                                    <%
+                                        if (user.getRol() > 0) {
+                                    %>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="añadirproducto.jsp">nuevo producto</a>
+                                    <a class="dropdown-item" href="administrarpedidos.jsp">administrar pedidos</a>
 
+                                    <%
+                                        }
+                                    %>
+                                    <%
+                                        if (user.getRol() > 1) {
+                                    %>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="administrarusuarios.jsp">usuarios</a>
+                                    <%
+                                        }
+                                    %>
                                 </div>
                                 <%
                                 } else {
@@ -270,7 +306,7 @@
         </div>
 
         <!-- ------------------------contenido-------------------------- -->
-         <footer class="footer text-center text-light">
+        <footer class="footer text-center text-light">
             <!-- Grid container -->
             <div class="container p-4 pb-0">
                 <!-- Section: Social media -->

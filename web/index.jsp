@@ -29,13 +29,13 @@
                 log = true;
                 nom = user.getNombre();
             }
-            String disabled="disabled";
-            String active="";
-            if(log && sesion.getAttribute("carrito")!=null){
+            String disabled = "disabled";
+            String active = "";
+            if (log && sesion.getAttribute("carrito") != null) {
                 List<Linea_pedido> lista = (List<Linea_pedido>) sesion.getAttribute("carrito");
-                if(!lista.isEmpty()){
-                    disabled="";
-                    active="active";
+                if (!lista.isEmpty()) {
+                    disabled = "";
+                    active = "active";
                 }
             }
         %>
@@ -89,7 +89,7 @@
                         <li class="nav-item active">
                             <a class="nav-link" href="catalogo.jsp">catalogo <span class="sr-only">(current)</span></a>
                         </li>
-                        
+
 
                         <li class="nav-item <%=active%>">
                             <a class="nav-link <%=disabled%>" href="carrito.jsp">carrito</a>
@@ -107,6 +107,7 @@
 
 
                         <%
+
                             if (log) {
                         %>
                         <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
@@ -115,8 +116,26 @@
                         </button>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
                             <a class="dropdown-item" href="modificarperfil.jsp">mi perfil</a>
+                            <a class="dropdown-item" href="pedidos.jsp">mis pedidos</a>
                             <a class="dropdown-item" href="cerrarSesion">cerrar sesion</a>
+                            <%
+                                if (user.getRol() > 0) {
+                            %>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="añadirproducto.jsp">nuevo producto</a>
+                            <a class="dropdown-item" href="administrarpedidos.jsp">administrar pedidos</a>
 
+                            <%
+                                }
+                            %>
+                            <%
+                                if (user.getRol() > 1) {
+                            %>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="administrarusuarios.jsp">usuarios</a>
+                            <%
+                                }
+                            %>
                         </div>
                         <%
                         } else {
@@ -159,8 +178,26 @@
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
                                     <a class="dropdown-item" href="modificarperfil.jsp">mi perfil</a>
+                                    <a class="dropdown-item" href="pedidos.jsp">mis pedidos</a>
                                     <a class="dropdown-item" href="cerrarSesion">cerrar sesion</a>
+                                    <%
+                                        if (user.getRol() > 0) {
+                                    %>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="añadirproducto.jsp">nuevo producto</a>
+                                    <a class="dropdown-item" href="administrarpedidos.jsp">administrar pedidos</a>
 
+                                    <%
+                                        }
+                                    %>
+                                    <%
+                                        if (user.getRol() > 1) {
+                                    %>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="administrarusuarios.jsp">usuarios</a>
+                                    <%
+                                        }
+                                    %>
                                 </div>
                                 <%
                                 } else {
@@ -289,8 +326,8 @@
                         <div class="card-body">
                             <h3 class="card-title"><%=cat.getNombre()%></h3>
                             <p class="card-text"> <a href="catalogo.jsp?categoria<%=cat.getId()%>=categoria<%=cat.getId()%>" class="link"><div class="card-footer text-center">
-                            <span class="comprar font-weight-bold">VER CATEGORIA</span>
-                        </div></a></p>
+                                        <span class="comprar font-weight-bold">VER CATEGORIA</span>
+                                    </div></a></p>
                         </div>
                     </div>
                 </div>
@@ -332,7 +369,7 @@
                     </div>
                     <div class="modal-footer">
                         <a class="dropdown-item" href="iniciarSession.jsp">crear una cuenta nueva</a>
-                        
+
                     </div>
                 </div>
             </div>

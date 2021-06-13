@@ -22,13 +22,18 @@
             boolean log = false;
             HttpSession sesion = request.getSession();
             coneccion con = new coneccion();
+            ServletContext contexto = getServletContext();
+            RequestDispatcher rd;
             if (sesion.getAttribute("user") != null) {
                 user = (Usuario) sesion.getAttribute("user");
                 log = true;
                 nom = user.getNombre();
-            }else {
-                ServletContext contexto = getServletContext();
-                RequestDispatcher rd;
+            } else {
+
+                rd = contexto.getRequestDispatcher("/index.jsp");
+                rd.forward(request, response);
+            }
+            if (user.getRol() < 2) {
                 rd = contexto.getRequestDispatcher("/index.jsp");
                 rd.forward(request, response);
             }
@@ -41,7 +46,7 @@
                     active = "active";
                 }
             }
-            List<Usuario> lista=con.gettodosusurarios(request);
+            List<Usuario> lista = con.gettodosusurarios(request);
         %>
         <!---------------------codigo----------------------->
         <!-- Required meta tags -->
@@ -119,8 +124,26 @@
                         </button>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
                             <a class="dropdown-item" href="modificarperfil.jsp">mi perfil</a>
+                            <a class="dropdown-item" href="pedidos.jsp">mis pedidos</a>
                             <a class="dropdown-item" href="cerrarSesion">cerrar sesion</a>
+                            <%
+                                if (user.getRol() > 0) {
+                            %>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="añadirproducto.jsp">nuevo producto</a>
+                            <a class="dropdown-item" href="administrarpedidos.jsp">administrar pedidos</a>
 
+                            <%
+                                }
+                            %>
+                            <%
+                                if (user.getRol() > 1) {
+                            %>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="administrarusuarios.jsp">usuarios</a>
+                            <%
+                                }
+                            %>
                         </div>
                         <%
                         } else {
@@ -163,8 +186,26 @@
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
                                     <a class="dropdown-item" href="modificarperfil.jsp">mi perfil</a>
+                                    <a class="dropdown-item" href="pedidos.jsp">mis pedidos</a>
                                     <a class="dropdown-item" href="cerrarSesion">cerrar sesion</a>
+                                    <%
+                                        if (user.getRol() > 0) {
+                                    %>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="añadirproducto.jsp">nuevo producto</a>
+                                    <a class="dropdown-item" href="administrarpedidos.jsp">administrar pedidos</a>
 
+                                    <%
+                                        }
+                                    %>
+                                    <%
+                                        if (user.getRol() > 1) {
+                                    %>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="administrarusuarios.jsp">usuarios</a>
+                                    <%
+                                        }
+                                    %>
                                 </div>
                                 <%
                                 } else {
@@ -195,12 +236,12 @@
         <!-- ------------------------contenido-------------------------- -->
         <div class="container my-5 pt-3 bg-light rounded sombras">
             <form action="administrarusuarios.jsp" method="POST">
-                    <div class="form-group">
-                        <input type="text" name="usuario" class="form-control" id="exampleFormControlInput1" placeholder="usuario">
-                    </div>
-                    <input type="hidden" value="1" name="buqueda">
-                    <input type="submit" class="btn btn-success mb-3" name="busfe" value="BUSCAR">
-                </form>
+                <div class="form-group">
+                    <input type="text" name="usuario" class="form-control" id="exampleFormControlInput1" placeholder="usuario">
+                </div>
+                <input type="hidden" value="1" name="buqueda">
+                <input type="submit" class="btn btn-success mb-3" name="busfe" value="BUSCAR">
+            </form>
             <table class="table table-striped">
                 <thead>
                     <tr>
@@ -214,26 +255,26 @@
                 <tbody>
                     <%
                         for (Usuario lista1 : lista) {
-                            String rol="";
-                            String estado="";
-                            if(lista1.getRol()==0){
-                                rol="user";
-                            }else if(lista1.getRol()==1){
-                                rol="empleado";
-                            }else if(lista1.getRol()==2){
-                                rol="admin";
+                            String rol = "";
+                            String estado = "";
+                            if (lista1.getRol() == 0) {
+                                rol = "user";
+                            } else if (lista1.getRol() == 1) {
+                                rol = "empleado";
+                            } else if (lista1.getRol() == 2) {
+                                rol = "admin";
                             }
-                            int st=0;
-                            String boton="bloquear";
-                            if(lista1.getEstado()==0){
-                                estado="bloqueado";
-                                boton="desbloquear";
-                                st=1;
-                            }else{
-                                estado="activo";
+                            int st = 0;
+                            String boton = "bloquear";
+                            if (lista1.getEstado() == 0) {
+                                estado = "bloqueado";
+                                boton = "desbloquear";
+                                st = 1;
+                            } else {
+                                estado = "activo";
                             }
-                                
-                        
+
+
                     %>
                     <tr>
                         <th scope="row"><%=lista1.getNick()%></th>
@@ -242,18 +283,18 @@
                         <td><%=estado%></td>
                         <td><a href="bloquear?id=<%=lista1.getId()%>&st=<%=st%>"><%=boton%></a>/<a href="editar.jsp?id=<%=lista1.getId()%>">editar</a></td>
                     </tr>
-                     <%
-                        
-                            }
-                                
-                        
+                    <%
+
+                        }
+
+
                     %>
                 </tbody>
             </table>
         </div>
 
         <!-- ------------------------contenido-------------------------- -->
-        
+
 
         <!-- Optional JavaScript; choose one of the two! -->
 

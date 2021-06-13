@@ -53,6 +53,7 @@ public class comprarproducto extends HttpServlet {
                 sesion.setAttribute("carrito", lista);
                 
             }
+            
             List<Linea_pedido> lista = (List<Linea_pedido>) sesion.getAttribute("carrito");
             int tallaid = Integer.parseInt(request.getParameter("talla"));
             int productoid = Integer.parseInt(request.getParameter("pro"));

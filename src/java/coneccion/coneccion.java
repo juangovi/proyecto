@@ -444,8 +444,8 @@ public class coneccion {
                 filtros.add(request.getParameter("fecha2"));
             }
             System.out.println(filtros.size());
-            if (filtros.size() > 2) {
-                fil += "fecha BETWEEN '" + request.getParameter("fecha1") + "' AND '" + request.getParameter("fecha12") + ",";
+            if (filtros.size() > 1) {
+                fil += "fecha BETWEEN '" + request.getParameter("fecha1") + "' AND '" + request.getParameter("fecha2") + "'";
             } else if (!filtros.isEmpty()) {
                 fil += "fecha ='" + filtros.get(0) + "'";
             }

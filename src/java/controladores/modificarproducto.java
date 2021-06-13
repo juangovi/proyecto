@@ -19,6 +19,8 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
@@ -50,8 +52,8 @@ public class modificarproducto extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-             coneccion con = new coneccion();
-             String proid = request.getParameter("idpro");
+            coneccion con = new coneccion();
+            String proid = request.getParameter("idpro");
             List<Tallas> tallas = con.obtenertodatallas(proid);
             if (request.getPart("foto").getSize() > 0) {
                 //Nos aseguramos que el archivo es una imagen y que no excece de unos 8mb
@@ -81,95 +83,100 @@ public class modificarproducto extends HttpServlet {
 
                         return;
                     }
-                    
-                   String sql = "UPDATE productos SET ";
 
-                        boolean first = true;
+                    String sql = "UPDATE productos SET ";
 
-                        if (request.getParameter("descripcion") != null && !request.getParameter("descripcion").equals("")) {
-                            if (!first) {
-                                sql += ",";
-                            }
-                            first = false;
-                            sql += "descripcion='" + request.getParameter("descripcion") + "' ";
+                    boolean first = true;
 
+                    if (request.getParameter("descripcion") != null && !request.getParameter("descripcion").equals("")) {
+                        if (!first) {
+                            sql += ",";
                         }
-                        if (request.getParameter("categoria") != null && !request.getParameter("categoria").equals("")) {
-                            if (!first) {
-                                sql += ",";
-                            }
-                            first = false;
-                            sql += "categoria='" + request.getParameter("categoria") + "' ";
+                        first = false;
+                        sql += "descripcion='" + request.getParameter("descripcion") + "' ";
 
+                    }
+                    if (request.getParameter("categoria") != null && !request.getParameter("categoria").equals("")) {
+                        if (!first) {
+                            sql += ",";
                         }
-                        if (request.getParameter("precio") != null && !request.getParameter("precio").equals("")) {
-                            if (!first) {
-                                sql += ",";
-                            }
-                            first = false;
-                            sql += "precio='" + request.getParameter("precio") + "' ";
+                        first = false;
+                        sql += "categoria='" + request.getParameter("categoria") + "' ";
 
+                    }
+                    if (request.getParameter("precio") != null && !request.getParameter("precio").equals("")) {
+                        if (!first) {
+                            sql += ",";
                         }
-                        if (name != null && !name.equals("")) {
-                            if (!first) {
-                                sql += ",";
-                            }
-                            first = false;
-                            sql += "imagen='" + "img/productos" + name+ "' ";
+                        first = false;
+                        sql += "precio='" + request.getParameter("precio") + "' ";
 
+                    }
+                    if (name != null && !name.equals("")) {
+                        if (!first) {
+                            sql += ",";
                         }
+                        first = false;
+                        sql += "imagen='" + "img/productos" + name + "' ";
 
-                        sql += "WHERE id=" + request.getParameter("idpro");
-                        System.out.println(sql);
+                    }
+
+                    sql += "WHERE id=" + request.getParameter("idpro");
+                    System.out.println(sql);
+                    con.modificacion(sql);
+                    for (Tallas talla : tallas) {
+                        sql = "UPDATE tallas SET cantidad=" + request.getParameter("" + talla.getId()) + " WHERE id=" + talla.getId();
                         con.modificacion(sql);
-                        for (Tallas talla : tallas) {
-                            sql = "UPDATE tallas SET cantidad=" + request.getParameter("" + talla.getId()) + " WHERE id=" + talla.getId();
-                            con.modificacion(sql);
-                        }
+                    }
                 }
-            }else{
-                 String sql = "UPDATE productos SET ";
+            } else {
+                String sql = "UPDATE productos SET ";
 
-                        boolean first = true;
+                boolean first = true;
 
-                        if (request.getParameter("descripcion") != null && !request.getParameter("descripcion").equals("")) {
-                            if (!first) {
-                                sql += ",";
-                            }
-                            first = false;
-                            sql += "descripcion='" + request.getParameter("descripcion") + "' ";
+                if (request.getParameter("descripcion") != null && !request.getParameter("descripcion").equals("")) {
+                    if (!first) {
+                        sql += ",";
+                    }
+                    first = false;
+                    sql += "descripcion='" + request.getParameter("descripcion") + "' ";
 
-                        }
-                        if (request.getParameter("categoria") != null && !request.getParameter("categoria").equals("")) {
-                            if (!first) {
-                                sql += ",";
-                            }
-                            first = false;
-                            sql += "categoria='" + request.getParameter("categoria") + "' ";
+                }
+                if (request.getParameter("categoria") != null && !request.getParameter("categoria").equals("")) {
+                    if (!first) {
+                        sql += ",";
+                    }
+                    first = false;
+                    sql += "categoria='" + request.getParameter("categoria") + "' ";
 
-                        }
-                        if (request.getParameter("precio") != null && !request.getParameter("precio").equals("")) {
-                            if (!first) {
-                                sql += ",";
-                            }
-                            first = false;
-                            sql += "precio='" + request.getParameter("precio") + "' ";
+                }
+                if (request.getParameter("precio") != null && !request.getParameter("precio").equals("")) {
+                    if (!first) {
+                        sql += ",";
+                    }
+                    first = false;
+                    sql += "precio='" + request.getParameter("precio") + "' ";
 
-                        }
+                }
 
-                        sql += "WHERE id=" + request.getParameter("idpro");
-                        System.out.println(sql);
-                        con.modificacion(sql);
-                        for (Tallas talla : tallas) {
-                            sql = "UPDATE tallas SET cantidad=" + request.getParameter("" + talla.getId()) + " WHERE id=" + talla.getId();
-                            con.modificacion(sql);
-                        }
+                sql += "WHERE id=" + request.getParameter("idpro");
+                System.out.println(sql);
+                con.modificacion(sql);
+                for (Tallas talla : tallas) {
+                    sql = "UPDATE tallas SET cantidad=" + request.getParameter("" + talla.getId()) + " WHERE id=" + talla.getId();
+                    con.modificacion(sql);
+                }
             }
+            RequestDispatcher rd;
+            ServletContext contexto = getServletContext();
+            rd = contexto.getRequestDispatcher("/index.jsp");
+            rd.forward(request, response);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(modificarproducto.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
             Logger.getLogger(modificarproducto.class.getName()).log(Level.SEVERE, null, ex);
-        }    }
+        }
+    }
 
 // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**

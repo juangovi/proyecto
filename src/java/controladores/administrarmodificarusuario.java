@@ -53,6 +53,11 @@ public class administrarmodificarusuario extends HttpServlet {
                 rd=contexto.getRequestDispatcher("/index.jsp");
                 rd.forward(request, response);
             }
+             Usuario user=(Usuario) sesion.getAttribute("user");
+              if(user.getRol()<2){
+               rd = contexto.getRequestDispatcher("/index.jsp");
+                rd.forward(request, response); 
+            }
             if (request.getParameter("nombre") != null && !request.getParameter("nombre").equals("")) {
                 if(!first){
                     sql+=",";
