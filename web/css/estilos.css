@@ -124,3 +124,8 @@
 .aver{
     z-index: 0;
 }
+#map {
+  height: 30000px;
+  width: 10000px;
+}
+

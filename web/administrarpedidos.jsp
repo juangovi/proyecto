@@ -145,6 +145,7 @@
                             %>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="administrarusuarios.jsp">usuarios</a>
+                             <a class="dropdown-item" href="aminnuevousuario.jsp">nuevo usuarios</a>
                             <%
                                 }
                             %>
@@ -207,6 +208,7 @@
                                     %>
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item" href="administrarusuarios.jsp">usuarios</a>
+                                     <a class="dropdown-item" href="aminnuevousuario.jsp">nuevo usuarios</a>
                                     <%
                                         }
                                     %>
@@ -258,7 +260,8 @@
             </div>
 
             <%
-                for (Pedido ped : pedidos) {
+                for (Pedido ped : pedidos){
+                    Usuario usuario=con.getallUser(""+ped.getUsuario());
             %>
 
             <div class="card sombras">
@@ -268,7 +271,7 @@
                             <div class="container-fluid">
                                 <div class="card text-center border-0">
                                     <div class="card-body">
-                                        <h5 class="card-title"><%=user.getNick()%></h5>
+                                        <h5 class="card-title"><%=usuario.getNick()%></h5>
                                         <p class="card-text">estado del pedido:<%=ped.getEstado()%></p>
                                         <p class="card-text">precio total:<%=ped.getTotal()%></p>
                                     </div>

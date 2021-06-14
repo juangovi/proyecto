@@ -82,7 +82,7 @@ public class administrarmodificarusuario extends HttpServlet {
                 sql += "direccion='" + request.getParameter("direccion") + "' ";
                
             }
-            if (request.getParameter("password") != null && !request.getParameter("nombre").equals("")) {
+            if (request.getParameter("password") != null && !request.getParameter("password").equals("")) {
                 if(!first){
                     sql+=",";
                 }

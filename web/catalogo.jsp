@@ -154,6 +154,7 @@
                             %>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="administrarusuarios.jsp">usuarios</a>
+                             <a class="dropdown-item" href="aminnuevousuario.jsp">nuevo usuarios</a>
                             <%
                                 }
                             %>
@@ -207,6 +208,7 @@
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item" href="añadirproducto.jsp">nuevo producto</a>
                                     <a class="dropdown-item" href="administrarpedidos.jsp">administrar pedidos</a>
+                                     <a class="dropdown-item" href="aminnuevousuario.jsp">nuevo usuarios</a>
 
                                     <%
                                         }
@@ -304,7 +306,7 @@
                                         if (log) {
                                     %>
                                     <a href="comprarproducto.jsp?pro=<%=pro.getId()%>" class="link"><div class="card-footer text-center">
-                                            <span class="comprar font-weight-bold">COMPRAR</span>
+                                            <span class="comprar font-weight-bold">RESERVAR</span>
                                         </div></a>
 
                                     <%

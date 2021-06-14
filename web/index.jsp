@@ -68,8 +68,8 @@
         <title>vaqueros J&D</title>
         <script src="js/slicermenonu.js"></script>
         <script src="https://kit.fontawesome.com/8bdbc3ead7.js" crossorigin="anonymous"></script>
-
-
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+        <script src="js/maps.js"></script>
     </head>
 
     <body class="fondo">
@@ -133,6 +133,7 @@
                             %>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="administrarusuarios.jsp">usuarios</a>
+                            <a class="dropdown-item" href="aminnuevousuario.jsp">nuevo usuarios</a>
                             <%
                                 }
                             %>
@@ -195,6 +196,7 @@
                                     %>
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item" href="administrarusuarios.jsp">usuarios</a>
+                                     <a class="dropdown-item" href="aminnuevousuario.jsp">nuevo usuarios</a>
                                     <%
                                         }
                                     %>
@@ -283,7 +285,7 @@
                         if (log) {
                     %>
                     <a href="comprarproducto.jsp?pro=<%=pro.getId()%>" class="link"><div class="card-footer text-center">
-                            <span class="comprar font-weight-bold">COMPRAR</span>
+                            <span class="comprar font-weight-bold">RESERVAR</span>
                         </div></a>
 
                     <%
@@ -302,15 +304,7 @@
             </div>
         </div>
         <!-- ----------------------------ultimos------------------------------ -->
-        <!-- -----------------------------------------------jumbotron--------------------------------------------- -->
-        <div class="jumbo p-5">
-            <h1 class="display-4">nuestras tienda</h1>
-            <p class="lead">consulta la ubicación de las tiendas a lo largo de la semana y los horarios disponible de todo el mes</p>
-            <hr class="my-4">
-            <p>comparte tu ubicación para ver las tiendas mas cercanas para recoger sus pedidos o ver nuestros productos de cerca </p>
-            <a class="btn btn-primary btn-lg" href="#" role="button">ver tiendas</a>
-        </div>
-        <!-- -----------------------------------------------jumbotron--------------------------------------------- -->
+        
         <!-- categorias -->
         <h1 class="text-center font-weight-bold my-5">categorias</h1>
         <div class="container">
@@ -428,6 +422,10 @@
         -->
         <script src="js/comprobaciones.js"></script>
         <script src="js/slicermenonu.js"></script>
+         <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyClEN8h3G0rA2mK5Mfp7slx4IJEsMNkhEM&callback=initMap&libraries=&v=weekly"
+      async
+    ></script>
     </body>
 
 </html>

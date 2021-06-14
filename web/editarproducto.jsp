@@ -144,6 +144,7 @@
                             %>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="administrarusuarios.jsp">usuarios</a>
+                             <a class="dropdown-item" href="aminnuevousuario.jsp">nuevo usuarios</a>
                             <%
                                 }
                             %>
@@ -206,6 +207,7 @@
                             %>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="administrarusuarios.jsp">usuarios</a>
+                             <a class="dropdown-item" href="aminnuevousuario.jsp">nuevo usuarios</a>
                             <%
                                 }
                             %>
